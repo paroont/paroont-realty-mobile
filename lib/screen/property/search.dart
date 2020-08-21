@@ -19,7 +19,9 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
             child: TextFormField(
               decoration: InputDecoration(
                   //border: const OutlineInputBorder(),
-                  hintText: 'Enter a property'),
+                  hintText: 'Enter a property',
+                  suffixIcon: Icon(Icons.search)),
+                  autocorrect: true,
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter some property';
