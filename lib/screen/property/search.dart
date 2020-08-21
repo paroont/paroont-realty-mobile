@@ -21,13 +21,7 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
                   //border: const OutlineInputBorder(),
                   hintText: 'Enter a property',
                   suffixIcon: Icon(Icons.search)),
-                  autocorrect: true,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter some property';
-                }
-                return null;
-              },
+                  autocorrect: true,         
             ),
           ),
           IconButton(
