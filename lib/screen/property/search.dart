@@ -12,21 +12,23 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: 'Enter a property'),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some property';
-              }
-              return null;
-            },
+          Expanded(
+            child: TextFormField(
+              decoration: InputDecoration(
+                  //border: const OutlineInputBorder(),
+                  hintText: 'Enter a property'),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter some property';
+                }
+                return null;
+              },
+            ),
           ),
-          RaisedButton(
+          IconButton(
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 // If the form is valid, display a Snackbar.
@@ -34,7 +36,10 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
                     .showSnackBar(SnackBar(content: Text('Searching...')));
               }
             },
-            child: const Text('Filter', style: TextStyle(fontSize: 20)),
+            iconSize: 45,
+            icon: Icon(
+              Icons.list,
+            ),
           ),
         ],
       ),

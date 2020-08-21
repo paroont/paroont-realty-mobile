@@ -7,6 +7,7 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+  final _properties = List<String>.generate(100, (i) => "Property $i");
   @override
   Widget build(BuildContext context) {
     return _buildBody();
@@ -16,28 +17,17 @@ class _HomeBodyState extends State<HomeBody> {
     return Column(
       children: [
         PropertySearchForm(),
-        //_buildSearchResults(),
+        _buildProperties(),
       ],
     );
   }
 
-  Widget _buildSearch() {
-    return Row(children: [
-      TextField(
-        decoration: InputDecoration(
-             hintText: 'Enter a search term'),
-      )
-    ]);
-  }
-
-  Widget _buildSearchResults() {
-    return Container(
-        child: ListView(
-      children: [
-        ListTile(title: Text("Property 1")),
-        ListTile(title: Text("Property 2")),
-        ListTile(title: Text("Property 3"))
-      ],
-    ));
+  Widget _buildProperties() {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: _properties.length,
+            itemBuilder: (context, i) {
+              return ListTile(title: Text('${_properties[i]}'));
+            }));
   }
 }

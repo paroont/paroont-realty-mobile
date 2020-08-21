@@ -1,0 +1,4 @@
+Icons for Filter:
+    apps
+    list
+    Filter
