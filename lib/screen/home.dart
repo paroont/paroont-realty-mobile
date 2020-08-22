@@ -27,7 +27,16 @@ class _HomeBodyState extends State<HomeBody> {
         child: ListView.builder(
             itemCount: _properties.length,
             itemBuilder: (context, i) {
-              return ListTile(title: Text('${_properties[i]}'));
+              return ListTile(
+                title: Text('${_properties[i]}'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PropertyInfoScreen(propertyName: _properties[i],)),
+                  );
+                },
+              );
             }));
   }
 }

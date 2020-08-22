@@ -21,7 +21,7 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
                   //border: const OutlineInputBorder(),
                   hintText: 'Enter a property',
                   suffixIcon: Icon(Icons.search)),
-                  autocorrect: true,         
+              autocorrect: true,
             ),
           ),
           IconButton(
@@ -38,6 +38,23 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class PropertyInfoScreen extends StatelessWidget {
+  final String propertyName;
+
+  PropertyInfoScreen({Key key, @required this.propertyName}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Property Details!"),
+      ),
+      body: Center(
+        child: Text('$propertyName'),
       ),
     );
   }
