@@ -28,7 +28,13 @@ class _HomeBodyState extends State<HomeBody> {
             itemCount: _properties.length,
             itemBuilder: (context, i) {
               return ListTile(
-                title: Text('${_properties[i]}'),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text('${_properties[i]}'),
+                  Text('Address $i')
+                ],),
+                //title: Text('${_properties[i]}'),
                 onTap: () {
                   Navigator.push(
                     context,
