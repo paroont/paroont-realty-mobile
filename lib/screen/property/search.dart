@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:paroont_realty_mobile/model/property.dart';
+import 'package:paroont_realty_mobile/service/ref_data.dart';
 
 class PropertySearchForm extends StatefulWidget {
   @override
@@ -43,10 +45,68 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
   }
 }
 
-class PropertyInfoScreen extends StatelessWidget {
-  final String propertyName;
+class PropertySearchResultScreen extends StatefulWidget {
+  @override
+  _PropertySearchResultScreenState createState() =>
+      _PropertySearchResultScreenState();
+}
 
-  PropertyInfoScreen({Key key, @required this.propertyName}) : super(key: key);
+class _PropertySearchResultScreenState
+    extends State<PropertySearchResultScreen> {
+  final _properties = List<PropertyDetail>.generate(100, (i) {
+    var p = PropertyDetail();
+    if(i.isEven){
+      p.propertyTypeId = 1;
+      p.propertyTypeGroupId = 1;
+      p.configurationId = 2;
+      p.cityName ='Kharghar';
+    }else
+    {
+      p.propertyTypeId = 2;
+      p.propertyTypeGroupId = 2;
+      p.configurationId = 4;
+      p.cityName ='Mira Road';
+    }
+    p.buildingName = 'Property $i';
+    return p;
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: _properties.length,
+            itemBuilder: (context, i) {
+              return ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${Rdm().propertyConfigTypeValue(_properties[i].configurationId)}' &
+                     '${Rdm().propertyTypeGroupsValue(_properties[i].propertyTypeId)} ${Rdm().propertyTypeValue(_properties[i].propertyTypeGroupId)} in ${_properties[i].cityName}'),
+                   Text('${_properties[i].buildingName}'),
+                    Text('Address $i')
+                   
+                  ],
+                ),
+                //title: Text('${_properties[i]}'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PropertySearchDetailScreen(
+                              propertyDetail: _properties[i],
+                            )),
+                  );
+                },
+              );
+            }));
+  }
+}
+
+class PropertySearchDetailScreen extends StatelessWidget {
+  final PropertyDetail propertyDetail;
+
+  PropertySearchDetailScreen({Key key, @required this.propertyDetail})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +114,7 @@ class PropertyInfoScreen extends StatelessWidget {
         title: Text("Property Details!"),
       ),
       body: Center(
-        child: Text('$propertyName'),
+        child: Text('${propertyDetail.buildingName}'),
       ),
     );
   }
