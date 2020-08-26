@@ -11,7 +11,9 @@ class RealtyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Welcome ',
       theme: ThemeData(primaryColor: Colors.red,
-      iconTheme: IconThemeData(color: Colors.red )),
+     // iconTheme: IconThemeData(color: Colors.red )
+     ),
+      
       home: Scaffold(
         appBar: AppBar(title: Text("Paroont")),
         body: HomeBody(),
