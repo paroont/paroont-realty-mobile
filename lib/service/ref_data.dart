@@ -1,5 +1,3 @@
-
-
 import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 
 class Rdm {
@@ -13,9 +11,41 @@ class Rdm {
   Rdm._internal() {
     types[ARD_PROPERTY_TYPE_GROUP] = {'1': 'Residential', '2': 'Commerical'};
     types[ARD_PROPERTY_TYPE] = {'1': 'Apartment', '2': 'Independent Builder'};
-    types[ARD_PROPERTY_CONFIGURATION_TYPE] = {'1': '1 RK', '2': '1 BHK', '4':'2 BHK'};
+    types[ARD_PROPERTY_CONFIGURATION_TYPE] = {
+      '1': '1 RK',
+      '2': '1 BHK',
+      '4': '2 BHK'
+    };
     types[ARD_PROPERTY_AREA_UNIT] = {'1': 'sq. ft.', '2': 'sq. m.'};
-    types[ARD_PROPERTY_AREA_TYPE] = {'1': 'Carpet', '2': 'Super Built Up', '3':'Built Up'};
+    types[ARD_PROPERTY_AREA_TYPE] = {
+      '1': 'Carpet',
+      
+      '2': 'Built Up',
+      '3': 'Super Built Up'
+    };
+     types[ARD_PROPERTY_TRANSACTION_TYPE] = {
+      '1': 'Sell',
+      
+      '2': 'Rent',
+      '3': 'PG'
+    };
+    types[ARD_PROPERTY_AVAILABLE_TYPE] = {
+      '1': 'Under Construction',
+      '2': 'Ready To Move',
+      '3': 'Immediately',
+      '4': 'Date'
+    };
+    types[ARD_PROPERTY_FURNISH_TYPE] = {
+      '1': 'Furnished',
+      '2': 'Semi Furnished',
+      '3': 'Unfurnished'
+    };
+    types[ARD_PROPERTY_AGE_TYPE] = {
+      '1': 'Less than 5 Years',
+      '2': '5 to 10 Years'
+    };
+    types[ARD_FLOOR_NO_TYPE] = {'1': 'No', '2': 'Higher', '3':'Middle'};
+     types[ARD_PREFERED_TENANT_TYPE] = {'1': 'Any', '2': 'Family', '3':'Bachelor'};
   }
 
   Map _keyValueByType(String type) {
@@ -47,8 +77,6 @@ class Rdm {
     return _valueByKey(ARD_PROPERTY_TYPE_GROUP, key.toString());
   }
 
-  
-
   Map propertyConfigTypes() {
     return _keyValueByType(ARD_PROPERTY_CONFIGURATION_TYPE);
   }
@@ -72,4 +100,55 @@ class Rdm {
   String propertyAreaTypeValue(int key) {
     return _valueByKey(ARD_PROPERTY_AREA_TYPE, key.toString());
   }
+
+  Map propertyAvailableTypes() {
+    return _keyValueByType(ARD_PROPERTY_AVAILABLE_TYPE);
+  }
+
+  String propertyAvailableTypeValue(int key) {
+    return _valueByKey(ARD_PROPERTY_AVAILABLE_TYPE, key.toString());
+  }
+
+ 
+   Map propertyFurnishTypes() {
+    return _keyValueByType(ARD_PROPERTY_FURNISH_TYPE);
+  }
+
+  String propertyFurnishTypeValue(int key) {
+    return _valueByKey(ARD_PROPERTY_FURNISH_TYPE, key.toString());
+  }
+
+      Map propertyAgeTypes() {
+    return _keyValueByType(ARD_PROPERTY_AGE_TYPE);
+  }
+
+  String propertyAgeTypeValue(int key) {
+    return _valueByKey(ARD_PROPERTY_AGE_TYPE, key.toString());
+  }
+
+
+      Map propertyFloorNoTypes() {
+    return _keyValueByType(ARD_FLOOR_NO_TYPE);
+  }
+
+  String propertyFloorNoTypeValue(int key) {
+    return _valueByKey(ARD_FLOOR_NO_TYPE, key.toString());
+  }
+
+       Map propertyPreferredTenantTypes() {
+    return _keyValueByType(ARD_PREFERED_TENANT_TYPE);
+  }
+
+  String propertyPreferredTenantTypeValue(int key) {
+    return _valueByKey(ARD_PREFERED_TENANT_TYPE, key.toString());
+  }
+
+     Map propertyTransactionTypes() {
+    return _keyValueByType(ARD_PROPERTY_TRANSACTION_TYPE);
+  }
+
+  String propertyTransactionTypeValue(int key) {
+    return _valueByKey(ARD_PROPERTY_TRANSACTION_TYPE, key.toString());
+  }
+
 }

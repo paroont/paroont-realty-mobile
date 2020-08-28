@@ -1,30 +1,96 @@
+import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
+import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:intl/intl.dart';
 
-String propertyPriceWithArea(PropertyDetail p) {
-  double price = 0;
-  String priceStr = '';
-  NumberFormat priceFormat = NumberFormat.compactCurrency(
-      locale: 'en_IN', symbol: '\u20B9', decimalDigits: 2);
-  priceFormat.minimumFractionDigits = 0;
+String buildingTitle(PropertyDetail p) {
+  return notBlankStr(p.builderName)
+      ? '${p.builderName} ${p.buildingName}'
+      : '${p.buildingName}';
+}
+
+String propertyArea(PropertyDetail p, int type) {
+  String areaStr = '';
 
   NumberFormat areaFormat = NumberFormat.decimalPattern();
   areaFormat.maximumFractionDigits = 2;
   areaFormat.minimumFractionDigits = 0;
 
-  price = p.transactionTypeId == 1 ? p.expectedAmount : p.expectedRentAmount;
-  if (price > 0) {
-    priceStr = '${priceFormat.format(price)}';
-    if (p.carpetArea > 0) {
-      priceStr =
-          '$priceStr ${_propertyAreaPrice(price, p.carpetArea, p.carpetAreaUnitId, 1, priceFormat, areaFormat)}';
-    } else if (p.superBuiltUpArea > 0) {
-      priceStr =
-          '$priceStr ${_propertyAreaPrice(price, p.superBuiltUpArea, p.superBuiltUpAreaUnitId, 2, priceFormat, areaFormat)}';
-    } else if (p.builtUpArea > 0) {
-      priceStr =
-          '$priceStr ${_propertyAreaPrice(price, p.builtUpArea, p.builtUpAreaUnitId, 3, priceFormat, areaFormat)}';
+  double area = 0;
+  int unitId = 0;
+  int areaTypeId = 0;
+
+  if (p.carpetArea > 0) {
+    area = p.carpetArea;
+    unitId = p.carpetAreaUnitId;
+    areaTypeId = ARD_PROPERTY_AREA_TYPE_KEY_CARPET;
+  } else if (p.builtUpArea > 0) {
+    area = p.builtUpArea;
+    unitId = p.builtUpAreaUnitId;
+    areaTypeId = ARD_PROPERTY_AREA_TYPE_KEY_BUILT_UP;
+  } else if (p.superBuiltUpArea > 0) {
+    area = p.superBuiltUpArea;
+    unitId = p.superBuiltUpAreaUnitId;
+    areaTypeId = ARD_PROPERTY_AREA_TYPE_KEY_SUPER_BUILT_UP;
+  }
+
+  if (area > 0 && unitId > 0) {
+    if (type == 1) // Sq Ft.
+    {
+      areaStr =
+          '${areaFormat.format(toSqFt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
+    } else if (type == 2) // Sq Mt.
+    {
+      if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
+        areaStr =
+            '(${areaFormat.format(toSqMt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
+      }
+    } else if (type == 3) // Type.
+    {
+      areaStr = '${Rdm().propertyAreaTypeValue(areaTypeId)}';
+    }
+  }
+
+//Rs. 2.1 Cr @ Rs.30,000/ sq. ft. | 788 sq. ft. (63.92 sq.m.) Carpet Area
+  return areaStr;
+}
+
+String propertyPrice(PropertyDetail p) {
+  String priceStr = '';
+  NumberFormat priceFormat = NumberFormat.compactCurrency(
+      locale: 'en_IN', symbol: '\u20B9', decimalDigits: 2);
+  priceFormat.minimumFractionDigits = 0;
+
+  if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
+    double price = p.expectedAmount;
+    double area = 0;
+    int unitId = 0;
+    if (price > 0) {
+      priceStr = '${priceFormat.format(price)}';
+      if (p.carpetArea > 0) {
+        area = p.carpetArea;
+        unitId = p.carpetAreaUnitId;
+      } else if (p.builtUpArea > 0) {
+        area = p.builtUpArea;
+        unitId = p.builtUpAreaUnitId;
+      } else if (p.superBuiltUpArea > 0) {
+        area = p.superBuiltUpArea;
+        unitId = p.superBuiltUpAreaUnitId;
+      }
+      if (area > 0 && unitId > 0) {
+        priceStr =
+            '$priceStr @ ${priceFormat.format(price / area)} ${Rdm().propertyAreaUnitTypeValue(unitId)}';
+      }
+    }
+  } else {
+    double rent = p.expectedRentAmount;
+    double deposit = p.expectedDepositAmount;
+    if (rent > 0) {
+      priceStr = 'Rent ${priceFormat.format(rent)}/month ';
+    }
+    if (deposit > 0) {
+      priceStr = '$priceStr Deposit ${priceFormat.format(deposit)}';
     }
   }
 //Rs. 2.1 Cr @ Rs.30,000/ sq. ft. | 788 sq. ft. (63.92 sq.m.) Carpet Area
@@ -32,12 +98,112 @@ String propertyPriceWithArea(PropertyDetail p) {
 }
 
 String _propertyAreaPrice(double price, double area, int areaUnitId,
-    int areadUnitType, NumberFormat priceFormat, NumberFormat areaFormat) {
+    int areaUnitType, NumberFormat priceFormat, NumberFormat areaFormat) {
   String areaPrice = '@ ${priceFormat.format(price / area)}/';
   String areaUnitTitle = Rdm().propertyAreaUnitTypeValue(areaUnitId);
 
   areaPrice = '$areaPrice $areaUnitTitle';
   areaPrice =
-      '$areaPrice | ${areaFormat.format(area)} $areaUnitTitle ${Rdm().propertyAreaTypeValue(areadUnitType)} Area';
+      '$areaPrice | ${areaFormat.format(toSqFt(area, areaUnitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)} '
+      '(${areaFormat.format(toSqMt(area, areaUnitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)}) Area';
   return areaPrice;
+}
+
+double toSqFt(double area, int areaUnitId) {
+  double sqFt = 0;
+  if (ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT == areaUnitId) {
+    sqFt = area;
+  } else if (ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT == areaUnitId) {
+    sqFt = area * 10.763910417;
+  }
+  return sqFt;
+}
+
+double toSqMt(double area, int areaUnitId) {
+  double sqFt = 0;
+  if (ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT == areaUnitId) {
+    sqFt = area / 10.763910417;
+  } else if (ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT == areaUnitId) {
+    sqFt = area;
+  }
+  return sqFt;
+}
+
+List<String> propertySearchResultOutlines(PropertyDetail p) {
+  final _outlines = List<String>();
+  _addPropertyAvailableOutline(p, _outlines);
+  _addPropertyAgeOutline(p, _outlines);
+
+  _addFurnishOutline(p, _outlines);
+  _addFloorNoOutline(p, _outlines);
+
+  _addTenentTypeOutline(p, _outlines);
+
+  _outlines.removeWhere((e) => isBlankStr(e));
+  return _outlines;
+}
+
+void _addTenentTypeOutline(PropertyDetail p, List<String> outlines) {
+  if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
+      p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_PG) {
+    int key = p.tenantTypeId;
+    if (key > 0) {
+      outlines.add(Rdm().propertyPreferredTenantTypeValue(key));
+    }
+  }
+}
+
+void _addPropertyAgeOutline(PropertyDetail p, List<String> outlines) {
+  int key = p.propertyAgeId;
+  if (key > 0) {
+    String value = Rdm().propertyAgeTypeValue(key);
+    if (notBlankStr(value)) {
+      outlines.add('Age $value');
+    }
+  }
+}
+
+void _addFurnishOutline(PropertyDetail p, List<String> outlines) {
+  int key = p.furnishId;
+  if (key > 0) {
+    outlines.add(Rdm().propertyFurnishTypeValue(key));
+  }
+}
+
+void _addPropertyAvailableOutline(PropertyDetail p, List<String> outlines) {
+  int key = p.availabilityId;
+  if (key > 0) {
+    if (key == ARD_PROPERTY_AVAILABLE_TYPE_KEY_DATE &&
+        null != p.availabilityTs) {
+      String date = DateFormat(DF_DD_MMM_YYYY_SPACE).format(p.availabilityTs);
+      outlines.add('Available from $date');
+    } else {
+      outlines.add(Rdm().propertyAvailableTypeValue(key));
+    }
+  }
+}
+
+void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
+  int key = p.floorId;
+  String value = '';
+  if (key > 0) {
+    if (key == ARD_FLOOR_NO_TYPE_KEY_NO) {
+      String fno = p.floorNo;
+      if (notBlankStr(fno)) {
+        value = 'Floor $fno';
+      }
+    } else {
+      value = Rdm().propertyFloorNoTypeValue(key);
+      if (notBlankStr(value)) {
+        value = '$value Floor';
+      }
+    }
+    if (notBlankStr(value)) {
+      int tf = p.totalFloors;
+      if (tf > 0) {
+        value = '$value of $tf';
+      }
+      outlines.add(value);
+    }
+  }
 }

@@ -37,7 +37,7 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
             iconSize: 45,
             icon: Icon(
               Icons.list,
-              color:  Theme.of(context).primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ],
@@ -54,7 +54,6 @@ class PropertySearchResultScreen extends StatefulWidget {
 
 class _PropertySearchResultScreenState
     extends State<PropertySearchResultScreen> {
-  final _selectedIds = Set<int>();
   final _properties = List<PropertyDetail>.generate(100, (i) {
     var p = PropertyDetail();
     p.propertyId = i;
@@ -67,9 +66,15 @@ class _PropertySearchResultScreenState
       p.builderName = 'Balaji';
       p.buildingName = 'Delta Central';
 
-      p.expectedAmount = 50000000.8;
+      p.expectedAmount = 10000000.8;
       p.carpetArea = 500;
       p.carpetAreaUnitId = 1;
+      p.availabilityId = 1;
+      p.furnishId = 1;
+      p.propertyAgeId = 1;
+      p.floorId = 1;
+      p.floorNo = '4';
+      p.totalFloors = 23;
     } else {
       p.propertyTypeId = 2;
       p.propertyTypeGroupId = 2;
@@ -79,11 +84,28 @@ class _PropertySearchResultScreenState
       p.builderName = 'Paradise';
       p.buildingName = 'Sai World Empire';
       p.expectedRentAmount = 21000.66;
-      p.superBuiltUpArea = 300;
+      p.expectedDepositAmount = 125000;
+      p.builtUpArea = 300;
+      p.builtUpAreaUnitId = 2;
+      p.availabilityId = 3;
+      p.furnishId = 2;
+      p.propertyAgeId = 2;
+      p.tenantTypeId = 2;
+      p.floorId = 1;
+      p.floorNo = '5';
+    }
+    if (i > 6) {
+      p.buildingName = 'Property $i';
+      p.availabilityId = 2;
+      p.floorId = 2;
+      p.superBuiltUpArea = 600;
       p.superBuiltUpAreaUnitId = 2;
     }
-    if (i > 10) {
-      p.buildingName = 'Property $i';
+    if (i > 8) {
+      p.furnishId = 3;
+      p.availabilityId = 4;
+      p.availabilityTs = DateTime.now();
+      p.floorId = 3;
     }
     return p;
   });
@@ -99,47 +121,116 @@ class _PropertySearchResultScreenState
   }
 
   Widget _buildRow(BuildContext context, PropertyDetail p) {
-    final selected = _selectedIds.contains(p.propertyId);
     return ListTile(
-        leading: IconButton(
-          icon: Icon(
-            selected ? Icons.check_box : Icons.check_box_outline_blank,
-            color: selected ? Theme.of(context).primaryColor : null,
-          ),
-          onPressed: () {
-            setState(() {
-              if (selected) {
-                _selectedIds.remove(p.propertyId);
-              } else {
-                _selectedIds.add(p.propertyId);
-              }
-            });
-          },
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                '${notNullStr(Rdm().propertyConfigTypeValue(p.configurationId))} '
-                '${notNullStr(Rdm().propertyTypeGroupsValue(p.propertyTypeId))} '
-                '${notNullStr(Rdm().propertyTypeValue(p.propertyTypeGroupId))} '
-                'in ${notNullStr(p.cityName)}'),
-            Text(
-              '${p.buildingName}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text:
+                  '${notNullStr(Rdm().propertyTransactionTypeValue(p.transactionTypeId))} ',
+              style: DefaultTextStyle.of(context).style,
+              children: <TextSpan>[
+                TextSpan(
+                    text:
+                        '${notNullStr(Rdm().propertyConfigTypeValue(p.configurationId))} ',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                    text:
+                        '${notNullStr(Rdm().propertyTypeGroupsValue(p.propertyTypeId))} '
+                        '${notNullStr(Rdm().propertyTypeValue(p.propertyTypeGroupId))} '
+                        'in ${notNullStr(p.cityName)} '),
+              ],
             ),
-          ],
+          ),
+          RichText(
+            text: TextSpan(
+                text: '',
+                style: DefaultTextStyle.of(context).style,
+                children: [
+                  TextSpan(
+                      text: '${buildingTitle(p)}',
+                      style: TextStyle(fontWeight: FontWeight.w400)),
+                ]),
+          ),
+          // Text('${buildingTitle(p)}'),
+          RichText(
+            text: TextSpan(
+              text: '',
+              style: DefaultTextStyle.of(context).style,
+              children: <TextSpan>[
+                TextSpan(
+                    text: '${propertyPrice(p)} | ',
+                    style: TextStyle(fontWeight: FontWeight.w200)),
+                TextSpan(
+                  text: '${propertyArea(p, 1)} ',
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                TextSpan(
+                  text: '${propertyArea(p, 2)} ',
+                  style: TextStyle(fontWeight: FontWeight.w200),
+                ),
+                TextSpan(
+                  text: '${propertyArea(p, 3)} Area',
+                  style: TextStyle(fontWeight: FontWeight.w200),
+                ),
+              ],
+            ),
+          ),
+          Wrap(
+            children: _buildOutlines(context, p),
+          ),
+        ],
+      ),
+      subtitle: Row(
+        children: [
+          Text("Agent: "),
+          Text("View Contact No: "),
+          IconButton(
+            icon: Icon(
+              Icons.phone,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.message,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PropertySearchDetailScreen(
+                    propertyDetail: p,
+                  )),
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildOutlines(BuildContext context, PropertyDetail p) {
+    List<Widget> chips = List();
+
+    propertySearchResultOutlines(p).forEach((e) {
+      chips.add(
+        Chip(
+          label: Text(
+            e,
+            style: TextStyle(
+              fontWeight: FontWeight.w300,
+            ),
+          ),
         ),
-        subtitle: Text('${propertyPriceWithArea(p)}'),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PropertySearchDetailScreen(
-                      propertyDetail: p,
-                    )),
-          );
-        });
+      );
+    });
+
+    return chips;
   }
 }
 

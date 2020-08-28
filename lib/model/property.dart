@@ -141,6 +141,8 @@ class PropertyDetail {
   double expectedDepositAmount = -1;
   double expectedRentAmount = -1;
 
+int tenantTypeId = -1;
+
   double expectedAmount = -1;
 
   int allInclusiveAmount = -1;
