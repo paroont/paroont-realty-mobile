@@ -36,18 +36,18 @@ String propertyArea(PropertyDetail p, int type) {
   }
 
   if (area > 0 && unitId > 0) {
-    if (type == 1) // Sq Ft.
-    {
+    if (type == 1) {
+      /*Sq Ft. */
       areaStr =
           '${areaFormat.format(toSqFt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
-    } else if (type == 2) // Sq Mt.
-    {
+    } else if (type == 2) {
+      // Sq Mt.
       if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
         areaStr =
             '(${areaFormat.format(toSqMt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
       }
-    } else if (type == 3) // Type.
-    {
+    } else if (type == 3) {
+      // Type.
       areaStr = '${Rdm().propertyAreaTypeValue(areaTypeId)}';
     }
   }
@@ -56,18 +56,32 @@ String propertyArea(PropertyDetail p, int type) {
   return areaStr;
 }
 
-String propertyPrice(PropertyDetail p) {
-  String priceStr = '';
+NumberFormat propertyPriceFormat() {
   NumberFormat priceFormat = NumberFormat.compactCurrency(
       locale: 'en_IN', symbol: '\u20B9', decimalDigits: 2);
   priceFormat.minimumFractionDigits = 0;
+  return priceFormat;
+}
+
+String propertyBuyAmount(PropertyDetail p) {
+  String priceStr = '';
+  if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
+    double price = p.expectedAmount;
+    if (price > 0) {
+      priceStr = '${propertyPriceFormat().format(price)}';
+    }
+  }
+  return priceStr;
+}
+
+String propertyBuyUnitAmount(PropertyDetail p) {
+  String priceStr = '';
 
   if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
     double price = p.expectedAmount;
     double area = 0;
     int unitId = 0;
     if (price > 0) {
-      priceStr = '${priceFormat.format(price)}';
       if (p.carpetArea > 0) {
         area = p.carpetArea;
         unitId = p.carpetAreaUnitId;
@@ -80,33 +94,34 @@ String propertyPrice(PropertyDetail p) {
       }
       if (area > 0 && unitId > 0) {
         priceStr =
-            '$priceStr @ ${priceFormat.format(price / area)} ${Rdm().propertyAreaUnitTypeValue(unitId)}';
+            ' @ ${propertyPriceFormat().format(price / area)} ${Rdm().propertyAreaUnitTypeValue(unitId)} ';
       }
     }
-  } else {
-    double rent = p.expectedRentAmount;
-    double deposit = p.expectedDepositAmount;
-    if (rent > 0) {
-      priceStr = 'Rent ${priceFormat.format(rent)}/month ';
-    }
-    if (deposit > 0) {
-      priceStr = '$priceStr Deposit ${priceFormat.format(deposit)}';
-    }
   }
-//Rs. 2.1 Cr @ Rs.30,000/ sq. ft. | 788 sq. ft. (63.92 sq.m.) Carpet Area
   return priceStr;
 }
 
-String _propertyAreaPrice(double price, double area, int areaUnitId,
-    int areaUnitType, NumberFormat priceFormat, NumberFormat areaFormat) {
-  String areaPrice = '@ ${priceFormat.format(price / area)}/';
-  String areaUnitTitle = Rdm().propertyAreaUnitTypeValue(areaUnitId);
+String propertyRentAmount(PropertyDetail p) {
+  String priceStr = '';
+  if (p.transactionTypeId != ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
+    double rent = p.expectedRentAmount;
+    if (rent > 0) {
+      priceStr = '${propertyPriceFormat().format(rent)}/month ';
+    }
+  }
+  return priceStr;
+}
 
-  areaPrice = '$areaPrice $areaUnitTitle';
-  areaPrice =
-      '$areaPrice | ${areaFormat.format(toSqFt(area, areaUnitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)} '
-      '(${areaFormat.format(toSqMt(area, areaUnitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)}) Area';
-  return areaPrice;
+String propertyRentDepositAmount(PropertyDetail p) {
+  String priceStr = '';
+  if (p.transactionTypeId != ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
+    double deposit = p.expectedDepositAmount;
+
+    if (deposit > 0) {
+      priceStr = 'Deposit ${propertyPriceFormat().format(deposit)} ';
+    }
+  }
+  return priceStr;
 }
 
 double toSqFt(double area, int areaUnitId) {

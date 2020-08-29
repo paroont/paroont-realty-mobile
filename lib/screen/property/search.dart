@@ -22,8 +22,9 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
           Expanded(
             child: TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Enter a property', suffixIcon: Icon(Icons.search)),
-              autocorrect: true,
+                  hintText: 'Enter a property', prefixIcon: Icon(Icons.search)),
+              readOnly: true,
+              //onTap: ,
             ),
           ),
           IconButton(
@@ -127,41 +128,53 @@ class _PropertySearchResultScreenState
         children: [
           RichText(
             text: TextSpan(
-              text:
-                  '${notNullStr(Rdm().propertyTransactionTypeValue(p.transactionTypeId))} ',
               style: DefaultTextStyle.of(context).style,
               children: <TextSpan>[
+                TextSpan(
+                  text:
+                      '${notNullStr(Rdm().propertyTransactionTypeValue(p.transactionTypeId))} ',
+                ),
                 TextSpan(
                     text:
                         '${notNullStr(Rdm().propertyConfigTypeValue(p.configurationId))} ',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
                     text:
-                        '${notNullStr(Rdm().propertyTypeGroupsValue(p.propertyTypeId))} '
-                        '${notNullStr(Rdm().propertyTypeValue(p.propertyTypeGroupId))} '
-                        'in ${notNullStr(p.cityName)} '),
+                        '${notNullStr(Rdm().propertyTypeGroupsValue(p.propertyTypeId))} '),
+                TextSpan(
+                    text:
+                        '${notNullStr(Rdm().propertyTypeValue(p.propertyTypeGroupId))} '),
+                TextSpan(text: 'in ${notNullStr(p.cityName)} '),
               ],
             ),
           ),
           RichText(
-            text: TextSpan(
-                text: '',
-                style: DefaultTextStyle.of(context).style,
-                children: [
-                  TextSpan(
-                      text: '${buildingTitle(p)}',
-                      style: TextStyle(fontWeight: FontWeight.w400)),
-                ]),
+            text:
+                TextSpan(style: DefaultTextStyle.of(context).style, children: [
+              TextSpan(
+                  text: '${buildingTitle(p)}',
+                  style: TextStyle(fontWeight: FontWeight.w400)),
+            ]),
           ),
-          // Text('${buildingTitle(p)}'),
           RichText(
             text: TextSpan(
-              text: '',
               style: DefaultTextStyle.of(context).style,
               children: <TextSpan>[
                 TextSpan(
-                    text: '${propertyPrice(p)} | ',
+                  text: '${propertyBuyAmount(p)}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: '${propertyBuyUnitAmount(p)}',
+                ),
+                TextSpan(
+                    text: '${propertyRentAmount(p)}',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                    text: '${propertyRentDepositAmount(p)}',
                     style: TextStyle(fontWeight: FontWeight.w200)),
+                TextSpan(
+                    text: '| ', style: TextStyle(fontWeight: FontWeight.w200)),
                 TextSpan(
                   text: '${propertyArea(p, 1)} ',
                   style: TextStyle(fontWeight: FontWeight.w500),
@@ -179,6 +192,7 @@ class _PropertySearchResultScreenState
           ),
           Wrap(
             children: _buildOutlines(context, p),
+            spacing: 2,
           ),
         ],
       ),
@@ -233,6 +247,9 @@ class _PropertySearchResultScreenState
     return chips;
   }
 }
+
+// oLD Code
+
 
 class PropertySearchDetailScreen extends StatelessWidget {
   final PropertyDetail propertyDetail;
