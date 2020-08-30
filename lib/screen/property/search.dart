@@ -12,6 +12,7 @@ class PropertySearchForm extends StatefulWidget {
 class _PropertySearchFormState extends State<PropertySearchForm> {
   final _formKey = GlobalKey<FormState>();
   final _PropertySearchDelegate _searchDelegate = _PropertySearchDelegate();
+  var searchTextController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -22,9 +23,11 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
         children: <Widget>[
           Expanded(
             child: TextFormField(
+                controller: searchTextController,
                 decoration: InputDecoration(
-                    hintText: 'Search property',
-                    prefixIcon: Icon(Icons.search)),
+                  hintText: 'Search property',
+                  prefixIcon: Icon(Icons.search),
+                ),
                 readOnly: true,
                 onTap: () {
                   showSearchPage(context, _searchDelegate);
@@ -58,11 +61,9 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
     );
 
     if (selected != null) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Searching: $selected'),
-        ),
-      );
+      setState(() {
+        searchTextController.text = selected;
+      });
     }
   }
 }
