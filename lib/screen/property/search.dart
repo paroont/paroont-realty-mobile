@@ -3,6 +3,7 @@ import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
+import 'package:paroont_realty_mobile/service/property.dart';
 
 class PropertySearchForm extends StatefulWidget {
   @override
@@ -196,69 +197,33 @@ class PropertySearchResultScreen extends StatefulWidget {
 
 class _PropertySearchResultScreenState
     extends State<PropertySearchResultScreen> {
-  final _properties = List<PropertyDetail>.generate(100, (i) {
-    var p = PropertyDetail();
-    p.propertyId = i;
-    if (i.isEven) {
-      p.propertyTypeId = 1;
-      p.propertyTypeGroupId = 1;
-      p.configurationId = 2;
-      p.transactionTypeId = 1;
-      p.cityName = 'Kharghar';
-      p.builderName = 'Balaji';
-      p.buildingName = 'Delta Central';
-
-      p.expectedAmount = 10000000.8;
-      p.carpetArea = 500;
-      p.carpetAreaUnitId = 1;
-      p.availabilityId = 1;
-      p.furnishId = 1;
-      p.propertyAgeId = 1;
-      p.floorId = 1;
-      p.floorNo = '4';
-      p.totalFloors = 23;
-    } else {
-      p.propertyTypeId = 2;
-      p.propertyTypeGroupId = 2;
-      p.configurationId = 4;
-      p.transactionTypeId = 2;
-      p.cityName = 'Mira Road';
-      p.builderName = 'Paradise';
-      p.buildingName = 'Sai World Empire';
-      p.expectedRentAmount = 21000.66;
-      p.expectedDepositAmount = 125000;
-      p.builtUpArea = 300;
-      p.builtUpAreaUnitId = 2;
-      p.availabilityId = 3;
-      p.furnishId = 2;
-      p.propertyAgeId = 2;
-      p.tenantTypeId = 2;
-      p.floorId = 1;
-      p.floorNo = '5';
-    }
-    if (i > 6) {
-      p.buildingName = 'Property $i';
-      p.availabilityId = 2;
-      p.floorId = 2;
-      p.superBuiltUpArea = 600;
-      p.superBuiltUpAreaUnitId = 2;
-    }
-    if (i > 8) {
-      p.furnishId = 3;
-      p.availabilityId = 4;
-      p.availabilityTs = DateTime.now();
-      p.floorId = 3;
-    }
-    return p;
-  });
+  Future<List<PropertyDetail>> _properties;
+ 
+@override
+  void didChangeDependencies() {
+  _properties = PropertyService().allProperties();
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.separated(
-            separatorBuilder: (context, i) => Divider(),
-            itemCount: _properties.length,
-            itemBuilder: (context, i) {
-              return _buildRow(context, _properties[i]);
+    return Container(
+        child: FutureBuilder<List<PropertyDetail>>(
+            future: _properties,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Expanded(
+                    child: ListView.separated(
+                        separatorBuilder: (context, i) => Divider(),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, i) {
+                          return _buildRow(context, snapshot.data[i]);
+                        }));
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+
+              // By default, show a loading spinner.
+              return CircularProgressIndicator();
             }));
   }
 

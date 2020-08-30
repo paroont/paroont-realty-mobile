@@ -4,75 +4,71 @@ part 'property.g.dart';
 
 @JsonSerializable()
 class PropertyDetail {
-   int templateId;
-     String projectName;
+  int templateId;
+  String projectName;
 
-     int propertyTypeId;
-     String propertyTypeTitle;
+  int propertyTypeId;
+  String propertyTypeTitle;
 
-     int propertyTypeGroupId;
-     String propertyTypeGroupTitle;
+  int propertyTypeGroupId;
+  String propertyTypeGroupTitle;
 
+  String buildingName;
+  String builderName;
+  String builderWebUrl;
 
-     String buildingName;
-     String builderName;
-     String builderWebUrl;
+  int availabilityId;
+  String availabilityTitle;
+  DateTime availabilityTs;
 
-     int availabilityId;
-     String availabilityTitle;
-     DateTime availabilityTs;
+  int propertyAgeId = -1;
+  String propertyAgeTitle;
 
+  String localityIds;
+  String localityTitles;
 
-     int propertyAgeId = -1;
-     String propertyAgeTitle;
+  String addressLine1;
+  String addressLine2;
+  String cityName;
+  String stateName;
+  String landmarkName;
+  String pinCode;
+  String countryName;
 
-     String localityIds;
-     String localityTitles;
+  int totalFloors = -1;
+  int totalFlatsFloor = -1;
 
-     String addressLine1;
-     String addressLine2;
-     String cityName;
-     String stateName;
-     String landmarkName;
-     String pinCode;
-     String countryName;
+  int totalBuildingCoveredParking = -1;
+  int totalBuildingOpenParking = -1;
+  int totalBuildingVisitorParking = -1;
 
-     int totalFloors = -1;
-     int totalFlatsFloor = -1;
+  int totalServiceLift = -1;
+  int totalLift = -1;
 
-     int totalBuildingCoveredParking = -1;
-     int totalBuildingOpenParking = -1;
-     int totalBuildingVisitorParking = -1;
+  String reraId;
 
-     int totalServiceLift = -1;
-     int totalLift = -1;
+  DateTime ocTs;
+  String propertyDescription;
 
+  int earthquakeResistant = -1;
+  int gasPipeline = -1;
+  int clubHouse = -1;
+  int gym = -1;
+  int kidsPlayArea = -1;
+  int waterHarvesting = -1;
+  int swimmingPool = -1;
+  int commonAreaPowerBackup = -1;
+  int flatPowerBackup = -1;
+  int seniorCitizenArea = -1;
+  int gatedSociety = -1;
+  int waterSupply = -1;
+  int landscapeLawn = -1;
+  int banquetHall = -1;
+  int joggersTrack = -1;
+  int cctv = -1;
+  int fireAlarm = -1;
 
-     String reraId;
-
-     DateTime ocTs;
-     String propertyDescription;
-
-     int earthquakeResistant = -1;
-     int gasPipeline = -1;
-     int clubHouse = -1;
-     int gym = -1;
-     int kidsPlayArea = -1;
-     int waterHarvesting = -1;
-     int swimmingPool = -1;
-     int commonAreaPowerBackup = -1;
-     int flatPowerBackup = -1;
-     int seniorCitizenArea = -1;
-     int gatedSociety = -1;
-     int waterSupply = -1;
-     int landscapeLawn = -1;
-     int banquetHall = -1;
-     int joggersTrack = -1;
-     int cctv = -1;
-     int fireAlarm = -1;
-
-
-     int petFriendly = -1;
+  int petFriendly = -1;
   int propertyId;
   int transactionTypeId;
   String transactionTypeTitle;
@@ -141,7 +137,7 @@ class PropertyDetail {
   double expectedDepositAmount = -1;
   double expectedRentAmount = -1;
 
-int tenantTypeId = -1;
+  int tenantTypeId = -1;
 
   double expectedAmount = -1;
 
@@ -150,7 +146,9 @@ int tenantTypeId = -1;
 
   PropertyDetail();
 
-  factory PropertyDetail.fromJson(Map<String, dynamic> json) => _$PropertyDetailFromJson(json);
-  Map<String, dynamic> toJson() => _$PropertyDetailToJson(this);
+  factory PropertyDetail.fromJson(Map<String, dynamic> json) =>
+      _$PropertyDetailFromJson(json);
+  
 
+  Map<String, dynamic> toJson() => _$PropertyDetailToJson(this);
 }

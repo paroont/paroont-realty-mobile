@@ -12,9 +12,10 @@ class Rdm {
     types[ARD_PROPERTY_TYPE_GROUP] = {'1': 'Residential', '2': 'Commerical'};
     types[ARD_PROPERTY_TYPE] = {'1': 'Apartment', '2': 'Independent Builder'};
     types[ARD_PROPERTY_CONFIGURATION_TYPE] = {
-      '1': '1 RK',
+      
       '2': '1 BHK',
-      '4': '2 BHK'
+      '4': '2 BHK',
+      '6': '3 BHK'
     };
     types[ARD_PROPERTY_AREA_UNIT] = {'1': 'sq. ft.', '2': 'sq. m.'};
     types[ARD_PROPERTY_AREA_TYPE] = {

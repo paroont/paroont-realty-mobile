@@ -200,6 +200,7 @@ void _addPropertyAvailableOutline(PropertyDetail p, List<String> outlines) {
 
 void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
   int key = p.floorId;
+  int tf = p.totalFloors;
   String value = '';
   if (key > 0) {
     if (key == ARD_FLOOR_NO_TYPE_KEY_NO) {
@@ -214,11 +215,15 @@ void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
       }
     }
     if (notBlankStr(value)) {
-      int tf = p.totalFloors;
       if (tf > 0) {
         value = '$value of $tf';
       }
       outlines.add(value);
     }
   }
+    else if (tf > 0) {
+        outlines.add('Total Floor $tf');
+      }
+
+  
 }
