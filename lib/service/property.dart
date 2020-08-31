@@ -14,7 +14,7 @@ class PropertyService {
 
   Future<List<PropertyDetail>> allProperties() async {
     List<PropertyDetail> properties = List();
-    final response = await http.get(fullApiUrl(URL_REALTY_PROPERTY_SELL));
+    final response = await http.get(fullApiUrl(URL_REALTY_PROPERTY));
     String errorMsg = 'Failed to load properties.';
 
     if (response.statusCode == 200) {
