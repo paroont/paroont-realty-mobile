@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:paroont_realty_mobile/screen/home.dart';
+import 'package:paroont_realty_mobile/service/ref_data.dart';
 
-void main() {
+Future<void> main()  async{
+  await RdmService().loadAllAppRefData();
   runApp(RealtyApp());
 }
 

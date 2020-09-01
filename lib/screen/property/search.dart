@@ -238,18 +238,18 @@ class _PropertySearchResultScreenState
               children: <TextSpan>[
                 TextSpan(
                   text:
-                      '${notNullStr(Rdm().propertyTransactionTypeValue(p.transactionTypeId))} ',
+                      '${notNullStr(RdmService().propertyTransactionTypeValue(p.transactionTypeId))} ',
                 ),
                 TextSpan(
                     text:
-                        '${notNullStr(Rdm().propertyConfigTypeValue(p.configurationId))} ',
+                        '${notNullStr(RdmService().propertyConfigTypeValue(p.configurationId))} ',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
                     text:
-                        '${notNullStr(Rdm().propertyTypeGroupsValue(p.propertyTypeId))} '),
+                        '${notNullStr(RdmService().propertyTypeGroupsValue(p.propertyTypeId))} '),
                 TextSpan(
                     text:
-                        '${notNullStr(Rdm().propertyTypeValue(p.propertyTypeGroupId))} '),
+                        '${notNullStr(RdmService().propertyTypeValue(p.propertyTypeGroupId))} '),
                 TextSpan(text: 'in ${notNullStr(p.cityName)} '),
               ],
             ),

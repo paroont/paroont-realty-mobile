@@ -39,16 +39,16 @@ String propertyArea(PropertyDetail p, int type) {
     if (type == 1) {
       /*Sq Ft. */
       areaStr =
-          '${areaFormat.format(toSqFt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
+          '${areaFormat.format(toSqFt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
     } else if (type == 2) {
       // Sq Mt.
       if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
         areaStr =
-            '(${areaFormat.format(toSqMt(area, unitId))} ${Rdm().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
+            '(${areaFormat.format(toSqMt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
       }
     } else if (type == 3) {
       // Type.
-      areaStr = '${Rdm().propertyAreaTypeValue(areaTypeId)}';
+      areaStr = '${RdmService().propertyAreaTypeValue(areaTypeId)}';
     }
   }
 
@@ -94,7 +94,7 @@ String propertyBuyUnitAmount(PropertyDetail p) {
       }
       if (area > 0 && unitId > 0) {
         priceStr =
-            ' @ ${propertyPriceFormat().format(price / area)} ${Rdm().propertyAreaUnitTypeValue(unitId)} ';
+            ' @ ${propertyPriceFormat().format(price / area)} ${RdmService().propertyAreaUnitTypeValue(unitId)} ';
       }
     }
   }
@@ -159,11 +159,11 @@ List<String> propertySearchResultOutlines(PropertyDetail p) {
 }
 
 void _addTenentTypeOutline(PropertyDetail p, List<String> outlines) {
-  if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
-      p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_PG) {
-    int key = p.tenantTypeId;
+  if (notNullInt(p.transactionTypeId) == ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
+      notNullInt(p.transactionTypeId) == ARD_PROPERTY_TRANSACTION_TYPE_KEY_PG) {
+    int key = notNullInt(p.tenantTypeId);
     if (key > 0) {
-      outlines.add(Rdm().propertyPreferredTenantTypeValue(key));
+      outlines.add(RdmService().propertyPreferredTenantTypeValue(key));
     }
   }
 }
@@ -171,7 +171,7 @@ void _addTenentTypeOutline(PropertyDetail p, List<String> outlines) {
 void _addPropertyAgeOutline(PropertyDetail p, List<String> outlines) {
   int key = p.propertyAgeId;
   if (key > 0) {
-    String value = Rdm().propertyAgeTypeValue(key);
+    String value = RdmService().propertyAgeTypeValue(key);
     if (notBlankStr(value)) {
       outlines.add('Age $value');
     }
@@ -181,7 +181,7 @@ void _addPropertyAgeOutline(PropertyDetail p, List<String> outlines) {
 void _addFurnishOutline(PropertyDetail p, List<String> outlines) {
   int key = p.furnishId;
   if (key > 0) {
-    outlines.add(Rdm().propertyFurnishTypeValue(key));
+    outlines.add(RdmService().propertyFurnishTypeValue(key));
   }
 }
 
@@ -193,7 +193,7 @@ void _addPropertyAvailableOutline(PropertyDetail p, List<String> outlines) {
       String date = DateFormat(DF_DD_MMM_YYYY_SPACE).format(p.availabilityTs);
       outlines.add('Available from $date');
     } else {
-      outlines.add(Rdm().propertyAvailableTypeValue(key));
+      outlines.add(RdmService().propertyAvailableTypeValue(key));
     }
   }
 }
@@ -209,7 +209,7 @@ void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
         value = 'Floor $fno';
       }
     } else {
-      value = Rdm().propertyFloorNoTypeValue(key);
+      value = RdmService().propertyFloorNoTypeValue(key);
       if (notBlankStr(value)) {
         value = '$value Floor';
       }

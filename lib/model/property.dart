@@ -8,24 +8,19 @@ class PropertyDetail {
   String projectName;
 
   int propertyTypeId;
-  String propertyTypeTitle;
 
   int propertyTypeGroupId;
-  String propertyTypeGroupTitle;
 
   String buildingName;
   String builderName;
   String builderWebUrl;
 
   int availabilityId;
-  String availabilityTitle;
   DateTime availabilityTs;
 
   int propertyAgeId = -1;
-  String propertyAgeTitle;
 
   String localityIds;
-  String localityTitles;
 
   String addressLine1;
   String addressLine2;
@@ -71,10 +66,8 @@ class PropertyDetail {
   int petFriendly = -1;
   int propertyId;
   int transactionTypeId;
-  String transactionTypeTitle;
 
   int configurationId;
-  String configurationTitle;
 
   int totalBedrooms = -1;
   int totalMasterBedrooms = -1;
@@ -83,18 +76,14 @@ class PropertyDetail {
 
   double superBuiltUpArea = -1;
   int superBuiltUpAreaUnitId = -1;
-  String superBuiltUpAreaUnitTitle;
 
   double builtUpArea = -1;
   int builtUpAreaUnitId = -1;
-  String builtUpAreaUnitTitle;
 
   double carpetArea = -1;
   int carpetAreaUnitId = -1;
-  String carpetAreaUnitTitle;
 
   int furnishId = -1;
-  String furnishTitle;
 
   int floorId = -1;
   String floorNo;
@@ -103,18 +92,14 @@ class PropertyDetail {
   int totalOpenParking = -1;
 
   int faceId = -1;
-  String faceTitle;
 
   String overlookIds;
-  String overlookTitles;
 
   String floorTypeIds;
-  String floorTypeTitles;
 
   int amountNegotiable = -1;
   double maintenanceAmount = -1;
   int maintenancePeriodId = -1;
-  String maintenancePeriodTitle;
 
   int modularKitchen = -1;
 
@@ -128,10 +113,8 @@ class PropertyDetail {
   int totalBrokers = -1;
 
   String weekdaysVisitingIds;
-  String weekdaysVisitingTitles;
 
   String weekendVisitingIds;
-  String weekendVisitingTitles;
 
   int heavyDeposit = -1;
   double expectedDepositAmount = -1;
@@ -148,7 +131,6 @@ class PropertyDetail {
 
   factory PropertyDetail.fromJson(Map<String, dynamic> json) =>
       _$PropertyDetailFromJson(json);
-  
 
   Map<String, dynamic> toJson() => _$PropertyDetailToJson(this);
 }

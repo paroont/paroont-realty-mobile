@@ -1,14 +1,49 @@
 import 'package:paroont_realty_mobile/constant/paroont_const.dart';
+import 'package:paroont_realty_mobile/constant/url_const.dart';
+import 'package:paroont_realty_mobile/model/rdm.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Rdm {
-  static final Rdm _instance = Rdm._internal();
+class RdmService {
+  static final RdmService _instance = RdmService._internal();
   final Map<String, Map> types = Map();
 
-  factory Rdm() {
+  factory RdmService() {
     return _instance;
   }
 
-  Rdm._internal() {
+  Future<void> loadAllAppRefData() async {
+    final response = await http.get(fullApiUrl(URL_REALTY_RDM_ARD));
+    String errorMsg = 'Failed to load ref data.';
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonMap = json.decode(response.body);
+      if (jsonMap['status'] == true) {
+       (jsonMap['data'] as List)
+            .map((e) => AppRefData.fromJson(e))
+            .toList().forEach((e) => _updateRefData(e));
+      } else {
+        throw Exception(errorMsg);
+      }
+    } else {
+      throw Exception(errorMsg);
+    }
+  }
+
+  void _updateRefData(AppRefData ard) {
+    if (null != ard) {
+      var typeMap = types[ard.type];
+      if (null == typeMap) {
+        typeMap = Map();
+        types[ard.type] = typeMap;
+      }
+      typeMap[ard.key] = ard.value;
+    }
+  }
+
+  RdmService._internal() {
+/*
+
     types[ARD_PROPERTY_TYPE_GROUP] = {'1': 'Residential', '2': 'Commerical'};
     types[ARD_PROPERTY_TYPE] = {'1': 'Apartment', '2': 'Independent Builder'};
     types[ARD_PROPERTY_CONFIGURATION_TYPE] = {
@@ -47,6 +82,7 @@ class Rdm {
     };
     types[ARD_FLOOR_NO_TYPE] = {'1': 'No', '2': 'Higher', '3':'Middle'};
      types[ARD_PREFERED_TENANT_TYPE] = {'1': 'Any', '2': 'Family', '3':'Bachelor'};
+     */
   }
 
   Map _keyValueByType(String type) {
@@ -110,8 +146,7 @@ class Rdm {
     return _valueByKey(ARD_PROPERTY_AVAILABLE_TYPE, key.toString());
   }
 
- 
-   Map propertyFurnishTypes() {
+  Map propertyFurnishTypes() {
     return _keyValueByType(ARD_PROPERTY_FURNISH_TYPE);
   }
 
@@ -119,7 +154,7 @@ class Rdm {
     return _valueByKey(ARD_PROPERTY_FURNISH_TYPE, key.toString());
   }
 
-      Map propertyAgeTypes() {
+  Map propertyAgeTypes() {
     return _keyValueByType(ARD_PROPERTY_AGE_TYPE);
   }
 
@@ -127,8 +162,7 @@ class Rdm {
     return _valueByKey(ARD_PROPERTY_AGE_TYPE, key.toString());
   }
 
-
-      Map propertyFloorNoTypes() {
+  Map propertyFloorNoTypes() {
     return _keyValueByType(ARD_FLOOR_NO_TYPE);
   }
 
@@ -136,7 +170,7 @@ class Rdm {
     return _valueByKey(ARD_FLOOR_NO_TYPE, key.toString());
   }
 
-       Map propertyPreferredTenantTypes() {
+  Map propertyPreferredTenantTypes() {
     return _keyValueByType(ARD_PREFERED_TENANT_TYPE);
   }
 
@@ -144,12 +178,11 @@ class Rdm {
     return _valueByKey(ARD_PREFERED_TENANT_TYPE, key.toString());
   }
 
-     Map propertyTransactionTypes() {
+  Map propertyTransactionTypes() {
     return _keyValueByType(ARD_PROPERTY_TRANSACTION_TYPE);
   }
 
   String propertyTransactionTypeValue(int key) {
     return _valueByKey(ARD_PROPERTY_TRANSACTION_TYPE, key.toString());
   }
-
 }
