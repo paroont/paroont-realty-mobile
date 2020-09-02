@@ -134,3 +134,82 @@ class PropertyDetail {
 
   Map<String, dynamic> toJson() => _$PropertyDetailToJson(this);
 }
+
+@JsonSerializable()
+class PropertyFilter {
+  int propertyTypeId = -99;
+
+  int transactionTypeId = -99;
+
+  String searchQuery;
+
+  double minBudget = -99;
+  double maxBudget = -99;
+
+  int configurationId = -99;
+  int availabilityId = -99;
+  DateTime availabilityTs;
+
+  String cityName;
+  String areaName;
+  String pinCode;
+
+  double minArea = -99;
+  double maxArea = -99;
+  int areaTypeId = -99;
+  int areaUnitId = -99;
+
+  int tenantTypeId = -99;
+  int minFloorNo = -99;
+  int maxFloorNo = -99;
+  int floorId = -99;
+  int saleTypeId = -99;
+
+  int faceId = -99;
+  int furnishId = -99;
+  int postedUserTypeId = -99;
+  int totalBathrooms = -99;
+
+  int propertyAgeId = -99;
+
+  DateTime postedTs;
+  String localityIds;
+  PropertyFilter();
+
+  factory PropertyFilter.fromJson(Map<String, dynamic> json) =>
+      _$PropertyFilterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PropertyFilterToJson(this);
+
+  Map<String, String> toMap() {
+    return {
+      'propertyTypeId': propertyTypeId?.toString(),
+      'transactionTypeId': transactionTypeId?.toString(),
+      'searchQuery': searchQuery,
+      'minBudget': minBudget?.toString(),
+      'maxBudget': maxBudget?.toString(),
+      'configurationId': configurationId?.toString(),
+      'availabilityId': availabilityId?.toString(),
+      'availabilityTs': availabilityTs?.toIso8601String(),
+      'cityName': cityName,
+      'areaName': areaName,
+      'pinCode': pinCode,
+      'minArea': minArea?.toString(),
+      'maxArea': maxArea?.toString(),
+      'areaTypeId': areaTypeId?.toString(),
+      'areaUnitId': areaUnitId?.toString(),
+      'tenantTypeId': tenantTypeId?.toString(),
+      'minFloorNo': minFloorNo?.toString(),
+      'maxFloorNo': maxFloorNo?.toString(),
+      'floorId': floorId?.toString(),
+      'saleTypeId': saleTypeId?.toString(),
+      'faceId': faceId?.toString(),
+      'furnishId': furnishId?.toString(),
+      'postedUserTypeId': postedUserTypeId?.toString(),
+      'totalBathrooms': totalBathrooms?.toString(),
+      'propertyAgeId': propertyAgeId?.toString(),
+      'postedTs': postedTs?.toIso8601String(),
+      'localityIds': localityIds,
+    };
+  }
+}

@@ -12,9 +12,11 @@ class PropertyService {
 
   PropertyService._internal();
 
-  Future<List<PropertyDetail>> allProperties() async {
+  Future<List<PropertyDetail>> allProperties(PropertyFilter filter) async {
     List<PropertyDetail> properties = List();
-    final response = await http.get(fullApiUrl(URL_REALTY_PROPERTY));
+   var uri =  Uri.http(URL_REALTY_API_HOST, URL_REALTY_PROPERTY, filter.toMap());
+
+    final response = await http.get(uri);
     String errorMsg = 'Failed to load properties.';
 
     if (response.statusCode == 200) {

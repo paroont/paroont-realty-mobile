@@ -188,3 +188,69 @@ Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
       'allInclusiveAmount': instance.allInclusiveAmount,
       'taxAndGovChargeIncluded': instance.taxAndGovChargeIncluded,
     };
+
+PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
+  return PropertyFilter()
+    ..propertyTypeId = json['propertyTypeId'] as int
+    ..transactionTypeId = json['transactionTypeId'] as int
+    ..searchQuery = json['searchQuery'] as String
+    ..minBudget = (json['minBudget'] as num)?.toDouble()
+    ..maxBudget = (json['maxBudget'] as num)?.toDouble()
+    ..configurationId = json['configurationId'] as int
+    ..availabilityId = json['availabilityId'] as int
+    ..availabilityTs = json['availabilityTs'] == null
+        ? null
+        : DateTime.parse(json['availabilityTs'] as String)
+    ..cityName = json['cityName'] as String
+    ..areaName = json['areaName'] as String
+    ..pinCode = json['pinCode'] as String
+    ..minArea = (json['minArea'] as num)?.toDouble()
+    ..maxArea = (json['maxArea'] as num)?.toDouble()
+    ..areaTypeId = json['areaTypeId'] as int
+    ..areaUnitId = json['areaUnitId'] as int
+    ..tenantTypeId = json['tenantTypeId'] as int
+    ..minFloorNo = json['minFloorNo'] as int
+    ..maxFloorNo = json['maxFloorNo'] as int
+    ..floorId = json['floorId'] as int
+    ..saleTypeId = json['saleTypeId'] as int
+    ..faceId = json['faceId'] as int
+    ..furnishId = json['furnishId'] as int
+    ..postedUserTypeId = json['postedUserTypeId'] as int
+    ..totalBathrooms = json['totalBathrooms'] as int
+    ..propertyAgeId = json['propertyAgeId'] as int
+    ..postedTs = json['postedTs'] == null
+        ? null
+        : DateTime.parse(json['postedTs'] as String)
+    ..localityIds = json['localityIds'] as String;
+}
+
+Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
+    <String, dynamic>{
+      'propertyTypeId': instance.propertyTypeId,
+      'transactionTypeId': instance.transactionTypeId,
+      'searchQuery': instance.searchQuery,
+      'minBudget': instance.minBudget,
+      'maxBudget': instance.maxBudget,
+      'configurationId': instance.configurationId,
+      'availabilityId': instance.availabilityId,
+      'availabilityTs': instance.availabilityTs?.toIso8601String(),
+      'cityName': instance.cityName,
+      'areaName': instance.areaName,
+      'pinCode': instance.pinCode,
+      'minArea': instance.minArea,
+      'maxArea': instance.maxArea,
+      'areaTypeId': instance.areaTypeId,
+      'areaUnitId': instance.areaUnitId,
+      'tenantTypeId': instance.tenantTypeId,
+      'minFloorNo': instance.minFloorNo,
+      'maxFloorNo': instance.maxFloorNo,
+      'floorId': instance.floorId,
+      'saleTypeId': instance.saleTypeId,
+      'faceId': instance.faceId,
+      'furnishId': instance.furnishId,
+      'postedUserTypeId': instance.postedUserTypeId,
+      'totalBathrooms': instance.totalBathrooms,
+      'propertyAgeId': instance.propertyAgeId,
+      'postedTs': instance.postedTs?.toIso8601String(),
+      'localityIds': instance.localityIds,
+    };

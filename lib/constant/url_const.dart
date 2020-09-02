@@ -1,4 +1,4 @@
-const String URL_REALTY_API_HOST = "http://localhost:8080";
+const String URL_REALTY_API_HOST = "localhost:8080";
 
 String fullApiUrl(String url) {
   return '$URL_REALTY_API_HOST$url';

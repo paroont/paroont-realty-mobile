@@ -13,7 +13,9 @@ class RdmService {
   }
 
   Future<void> loadAllAppRefData() async {
-    final response = await http.get(fullApiUrl(URL_REALTY_RDM_ARD));
+      var uri =  Uri.http(URL_REALTY_API_HOST, URL_REALTY_RDM_ARD);
+
+    final response = await http.get(uri);
     String errorMsg = 'Failed to load ref data.';
 
     if (response.statusCode == 200) {

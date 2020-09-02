@@ -64,6 +64,7 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
     if (selected != null) {
       setState(() {
         searchTextController.text = selected;
+
       });
     }
   }
@@ -201,7 +202,8 @@ class _PropertySearchResultScreenState
  
 @override
   void didChangeDependencies() {
-  _properties = PropertyService().allProperties();
+    PropertyFilter filter = PropertyFilter();
+  _properties = PropertyService().allProperties(filter);
     super.didChangeDependencies();
   }
   @override
