@@ -137,7 +137,8 @@ class PropertyDetail {
 
 @JsonSerializable()
 class PropertyFilter {
-  int propertyTypeId = -99;
+   int propertyId = -99;
+    List<int> propertyTypeIds =  List();
 
   int transactionTypeId = -99;
 
@@ -146,8 +147,10 @@ class PropertyFilter {
   double minBudget = -99;
   double maxBudget = -99;
 
-  int configurationId = -99;
-  int availabilityId = -99;
+
+   List<int> configurationIds =  List();
+    List<int> availabilityIds =  List();
+
   DateTime availabilityTs;
 
   String cityName;
@@ -163,14 +166,17 @@ class PropertyFilter {
   int minFloorNo = -99;
   int maxFloorNo = -99;
   int floorId = -99;
-  int saleTypeId = -99;
+    List<int> saleTypeIds =  List();
 
-  int faceId = -99;
-  int furnishId = -99;
-  int postedUserTypeId = -99;
-  int totalBathrooms = -99;
+    List<int> faceIds =  List();
+    List<int> furnishIds =  List();
+    List<int> postedUserTypeIds =  List();
+    List<int> noOfBathrooms =  List();
 
-  int propertyAgeId = -99;
+    List<int> propertyAgeIds =  List();
+
+      List<int> tenantTypeIds =  List();
+
 
   DateTime postedTs;
   String localityIds;
@@ -183,13 +189,14 @@ class PropertyFilter {
 
   Map<String, String> toMap() {
     return {
-      'propertyTypeId': propertyTypeId?.toString(),
+      'propertyId': propertyId?.toString(),
+      'propertyTypeIds': propertyTypeIds?.join(","),
       'transactionTypeId': transactionTypeId?.toString(),
       'searchQuery': searchQuery,
       'minBudget': minBudget?.toString(),
       'maxBudget': maxBudget?.toString(),
-      'configurationId': configurationId?.toString(),
-      'availabilityId': availabilityId?.toString(),
+      'configurationIds': configurationIds?.join(","),
+      'availabilityIds': availabilityIds?.join(","),
       'availabilityTs': availabilityTs?.toIso8601String(),
       'cityName': cityName,
       'areaName': areaName,
@@ -202,12 +209,13 @@ class PropertyFilter {
       'minFloorNo': minFloorNo?.toString(),
       'maxFloorNo': maxFloorNo?.toString(),
       'floorId': floorId?.toString(),
-      'saleTypeId': saleTypeId?.toString(),
-      'faceId': faceId?.toString(),
-      'furnishId': furnishId?.toString(),
-      'postedUserTypeId': postedUserTypeId?.toString(),
-      'totalBathrooms': totalBathrooms?.toString(),
-      'propertyAgeId': propertyAgeId?.toString(),
+      'saleTypeIds': saleTypeIds?.join(","),
+      'faceIds': faceIds?.join(","),
+      'furnishIds': furnishIds?.join(","),
+      'postedUserTypeIds': postedUserTypeIds?.join(","),
+      'noOfBathrooms': noOfBathrooms?.join(","),
+      'propertyAgeIds': propertyAgeIds?.join(","),
+      'tenantTypeIds': tenantTypeIds?.join(","),
       'postedTs': postedTs?.toIso8601String(),
       'localityIds': localityIds,
     };

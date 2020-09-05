@@ -191,13 +191,17 @@ Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
 
 PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
   return PropertyFilter()
-    ..propertyTypeId = json['propertyTypeId'] as int
+    ..propertyId = json['propertyId'] as int
+    ..propertyTypeIds =
+        (json['propertyTypeIds'] as List)?.map((e) => e as int)?.toList()
     ..transactionTypeId = json['transactionTypeId'] as int
     ..searchQuery = json['searchQuery'] as String
     ..minBudget = (json['minBudget'] as num)?.toDouble()
     ..maxBudget = (json['maxBudget'] as num)?.toDouble()
-    ..configurationId = json['configurationId'] as int
-    ..availabilityId = json['availabilityId'] as int
+    ..configurationIds =
+        (json['configurationIds'] as List)?.map((e) => e as int)?.toList()
+    ..availabilityIds =
+        (json['availabilityIds'] as List)?.map((e) => e as int)?.toList()
     ..availabilityTs = json['availabilityTs'] == null
         ? null
         : DateTime.parse(json['availabilityTs'] as String)
@@ -212,12 +216,18 @@ PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
     ..minFloorNo = json['minFloorNo'] as int
     ..maxFloorNo = json['maxFloorNo'] as int
     ..floorId = json['floorId'] as int
-    ..saleTypeId = json['saleTypeId'] as int
-    ..faceId = json['faceId'] as int
-    ..furnishId = json['furnishId'] as int
-    ..postedUserTypeId = json['postedUserTypeId'] as int
-    ..totalBathrooms = json['totalBathrooms'] as int
-    ..propertyAgeId = json['propertyAgeId'] as int
+    ..saleTypeIds =
+        (json['saleTypeIds'] as List)?.map((e) => e as int)?.toList()
+    ..faceIds = (json['faceIds'] as List)?.map((e) => e as int)?.toList()
+    ..furnishIds = (json['furnishIds'] as List)?.map((e) => e as int)?.toList()
+    ..postedUserTypeIds =
+        (json['postedUserTypeIds'] as List)?.map((e) => e as int)?.toList()
+    ..noOfBathrooms =
+        (json['noOfBathrooms'] as List)?.map((e) => e as int)?.toList()
+    ..propertyAgeIds =
+        (json['propertyAgeIds'] as List)?.map((e) => e as int)?.toList()
+    ..tenantTypeIds =
+        (json['tenantTypeIds'] as List)?.map((e) => e as int)?.toList()
     ..postedTs = json['postedTs'] == null
         ? null
         : DateTime.parse(json['postedTs'] as String)
@@ -226,13 +236,14 @@ PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
     <String, dynamic>{
-      'propertyTypeId': instance.propertyTypeId,
+      'propertyId': instance.propertyId,
+      'propertyTypeIds': instance.propertyTypeIds,
       'transactionTypeId': instance.transactionTypeId,
       'searchQuery': instance.searchQuery,
       'minBudget': instance.minBudget,
       'maxBudget': instance.maxBudget,
-      'configurationId': instance.configurationId,
-      'availabilityId': instance.availabilityId,
+      'configurationIds': instance.configurationIds,
+      'availabilityIds': instance.availabilityIds,
       'availabilityTs': instance.availabilityTs?.toIso8601String(),
       'cityName': instance.cityName,
       'areaName': instance.areaName,
@@ -245,12 +256,13 @@ Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
       'minFloorNo': instance.minFloorNo,
       'maxFloorNo': instance.maxFloorNo,
       'floorId': instance.floorId,
-      'saleTypeId': instance.saleTypeId,
-      'faceId': instance.faceId,
-      'furnishId': instance.furnishId,
-      'postedUserTypeId': instance.postedUserTypeId,
-      'totalBathrooms': instance.totalBathrooms,
-      'propertyAgeId': instance.propertyAgeId,
+      'saleTypeIds': instance.saleTypeIds,
+      'faceIds': instance.faceIds,
+      'furnishIds': instance.furnishIds,
+      'postedUserTypeIds': instance.postedUserTypeIds,
+      'noOfBathrooms': instance.noOfBathrooms,
+      'propertyAgeIds': instance.propertyAgeIds,
+      'tenantTypeIds': instance.tenantTypeIds,
       'postedTs': instance.postedTs?.toIso8601String(),
       'localityIds': instance.localityIds,
     };
