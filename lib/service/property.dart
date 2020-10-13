@@ -14,7 +14,7 @@ class PropertyService {
 
   Future<List<PropertyDetail>> allProperties(PropertyFilter filter) async {
     List<PropertyDetail> properties = List();
-   var uri =  Uri.http(URL_REALTY_API_HOST, URL_REALTY_PROPERTY, filter.toMap());
+   var uri =  Uri.http(URL_REALTY_API_HOST, URL_REALTY_CACHE_PROPERTY, filter.toMap());
 
     final response = await http.get(uri);
     String errorMsg = 'Failed to load properties.';
@@ -34,3 +34,5 @@ class PropertyService {
     return properties;
   }
 }
+
+

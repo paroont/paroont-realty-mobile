@@ -5,6 +5,7 @@ String fullApiUrl(String url) {
 }
 
 const String URL_REALTY_API_DATA_PREFIX = "/api/data/realty";
+const String URL_REALTY_API_CACHE_DATA_PREFIX = "/api/data-swift/realty";
 const String URL_REALTY_RDM_API_DATA_PREFIX =
     URL_REALTY_API_DATA_PREFIX + "/rdm";
 
@@ -14,5 +15,6 @@ const String URL_REALTY_RDM_PROPERTY_API_DATA_PREFIX =
 const String URL_REALTY_RDM_COMMON_API_DATA_PREFIX =
     URL_REALTY_RDM_API_DATA_PREFIX + "/common";
  const    String URL_REALTY_PROPERTY  = URL_REALTY_API_DATA_PREFIX + "/properties";
+ const    String URL_REALTY_CACHE_PROPERTY  = URL_REALTY_API_CACHE_DATA_PREFIX + "/properties";
  const    String URL_REALTY_RDM_ARD  = URL_REALTY_RDM_API_DATA_PREFIX + "/app-ref-data";
 
