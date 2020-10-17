@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:paroont_realty_mobile/model/common.dart';
 
 part 'property.g.dart';
 
 @JsonSerializable()
-class PropertyDetail {
+class PropertyDetail  with CoreObj{
   int templateId;
   String projectName;
 
@@ -136,7 +137,8 @@ class PropertyDetail {
 }
 
 @JsonSerializable()
-class PropertyFilter {
+class PropertyFilter with CoreFilter{
+  
    int propertyId = -99;
     List<int> propertyTypeIds =  List();
 
@@ -190,6 +192,8 @@ class PropertyFilter {
   Map<String, String> toMap() {
     return {
       'propertyId': propertyId?.toString(),
+      'pageNo': pageNo?.toString(),
+      'pageSize': pageSize?.toString(),
       'propertyTypeIds': propertyTypeIds?.join(","),
       'transactionTypeId': transactionTypeId?.toString(),
       'searchQuery': searchQuery,

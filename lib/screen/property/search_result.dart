@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
+import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:paroont_realty_mobile/screen/property/search.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
@@ -18,45 +19,92 @@ class PropertySearchResultScreen extends StatefulWidget {
 
 class PropertySearchResultScreenState
     extends State<PropertySearchResultScreen> {
-  Future<List<PropertyDetail>> _properties;
+  List<PropertyDetail> allProperties = List();
 
+  Future<CorePaginationData<PropertyDetail>> _properties;
+
+  ScrollController _scrollController = ScrollController(keepScrollOffset: true);
+
+  bool _isLoading = false;
+  int totalRecords = 0;
   @override
   void didChangeDependencies() {
-    loadProperties();
+    _loadProperties();
     super.didChangeDependencies();
+  }
+
+  _scrollListener() {
+    if (!_isLoading &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+      setState(() {
+        _isLoading = true;
+        PropertySearchMainWidget.of(context).filter.pageNo++;
+
+        if (PropertySearchMainWidget.of(context).filter.pageNo <=
+            (totalRecords /
+                PropertySearchMainWidget.of(context).filter.pageSize)) {
+          _loadProperties();
+        }
+
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder<List<PropertyDetail>>(
+      child: FutureBuilder<CorePaginationData<PropertyDetail>>(
           future: _properties,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Expanded(
-                  child: ListView.separated(
-                      separatorBuilder: (context, i) => Divider(),
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, i) {
-                        return _buildRow(context, snapshot.data[i]);
-                      }));
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+            Widget widget;
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  widget = Text("${snapshot.error}");
+                } else {
+                  totalRecords = snapshot.data.totalRecords;
+                  allProperties.addAll(snapshot.data.data);
+                  widget = Expanded(
+                      child: ListView.separated(
+                          controller: _scrollController,
+                          separatorBuilder: (context, i) => Divider(),
+                          itemCount: allProperties.length,
+                          itemBuilder: (context, i) {
+                            return _buildRow(context, allProperties[i]);
+                          }));
+                }
+                break;
+              default:
+                widget = CircularProgressIndicator();
+                break;
             }
-
-            // By default, show a loading spinner.
-            return CircularProgressIndicator();
+            return widget;
           }),
     );
   }
 
   void loadData() {
     setState(() {
-      loadProperties();
+      PropertySearchMainWidget.of(context).filter.pageNo = 0;
+      _loadProperties();
     });
   }
 
-  void loadProperties() {
+  void _loadProperties() {
     _properties = PropertyService()
         .allProperties(PropertySearchMainWidget.of(context).filter);
   }
@@ -72,7 +120,7 @@ class PropertySearchResultScreenState
               children: <TextSpan>[
                 TextSpan(
                   text:
-                      '${notNullStr(RdmService().propertyTransactionTypeValue(p.transactionTypeId))} ',
+                      'Id: ${p.propertyId} ${notNullStr(RdmService().propertyTransactionTypeValue(p.transactionTypeId))} ',
                 ),
                 TextSpan(
                     text:
