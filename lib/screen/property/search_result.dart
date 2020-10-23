@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/model/common.dart';
-import 'package:paroont_realty_mobile/screen/property/search.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
+
 
 class PropertySearchResultScreen extends StatefulWidget {
   const PropertySearchResultScreen({
@@ -39,11 +39,11 @@ class PropertySearchResultScreenState
             _scrollController.position.maxScrollExtent) {
       setState(() {
         _isLoading = true;
-        PropertySearchMainWidget.of(context).filter.pageNo++;
-
-        if (PropertySearchMainWidget.of(context).filter.pageNo <=
+        // PropertySearchMainWidget.of(context).filter.pageNo++;
+PropertyService().getFilter().pageNo++;
+        if (PropertyService().getFilter().pageNo <=
             (totalRecords /
-                PropertySearchMainWidget.of(context).filter.pageSize)) {
+                PropertyService().getFilter().pageSize)) {
           _loadProperties();
         }
 
@@ -99,14 +99,14 @@ class PropertySearchResultScreenState
 
   void loadData() {
     setState(() {
-      PropertySearchMainWidget.of(context).filter.pageNo = 0;
+      PropertyService().getFilter().pageNo = 0;
       _loadProperties();
     });
   }
 
   void _loadProperties() {
     _properties = PropertyService()
-        .allProperties(PropertySearchMainWidget.of(context).filter);
+        .allProperties(PropertyService().getFilter());
   }
 
   Widget _buildRow(BuildContext context, PropertyDetail p) {
@@ -228,6 +228,9 @@ class PropertySearchResultScreenState
               fontWeight: FontWeight.w300,
             ),
           ),
+          padding: EdgeInsets.all(2),
+          //labelPadding: EdgeInsets.all(4),
+          //labelPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 10),
         ),
       );
     });

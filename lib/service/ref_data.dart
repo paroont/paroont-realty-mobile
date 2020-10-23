@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class RdmService {
   static final RdmService _instance = RdmService._internal();
-  final Map<String, Map> types = Map();
+  final Map<String, Map<String,String>> types = Map();
 
   factory RdmService() {
     return _instance;
@@ -43,49 +43,7 @@ class RdmService {
     }
   }
 
-  RdmService._internal() {
-/*
-
-    types[ARD_PROPERTY_TYPE_GROUP] = {'1': 'Residential', '2': 'Commerical'};
-    types[ARD_PROPERTY_TYPE] = {'1': 'Apartment', '2': 'Independent Builder'};
-    types[ARD_PROPERTY_CONFIGURATION_TYPE] = {
-      
-      '2': '1 BHK',
-      '4': '2 BHK',
-      '6': '3 BHK'
-    };
-    types[ARD_PROPERTY_AREA_UNIT] = {'1': 'sq. ft.', '2': 'sq. m.'};
-    types[ARD_PROPERTY_AREA_TYPE] = {
-      '1': 'Carpet',
-      
-      '2': 'Built Up',
-      '3': 'Super Built Up'
-    };
-     types[ARD_PROPERTY_TRANSACTION_TYPE] = {
-      '1': 'Sell',
-      
-      '2': 'Rent',
-      '3': 'PG'
-    };
-    types[ARD_PROPERTY_AVAILABLE_TYPE] = {
-      '1': 'Under Construction',
-      '2': 'Ready To Move',
-      '3': 'Immediately',
-      '4': 'Date'
-    };
-    types[ARD_PROPERTY_FURNISH_TYPE] = {
-      '1': 'Furnished',
-      '2': 'Semi Furnished',
-      '3': 'Unfurnished'
-    };
-    types[ARD_PROPERTY_AGE_TYPE] = {
-      '1': 'Less than 5 Years',
-      '2': '5 to 10 Years'
-    };
-    types[ARD_FLOOR_NO_TYPE] = {'1': 'No', '2': 'Higher', '3':'Middle'};
-     types[ARD_PREFERED_TENANT_TYPE] = {'1': 'Any', '2': 'Family', '3':'Bachelor'};
-     */
-  }
+  RdmService._internal();
 
   Map _keyValueByType(String type) {
     return types[type];
@@ -173,11 +131,11 @@ class RdmService {
   }
 
   Map propertyPreferredTenantTypes() {
-    return _keyValueByType(ARD_PREFERED_TENANT_TYPE);
+    return _keyValueByType(ARD_PREFERRED_TENANT_TYPE);
   }
 
   String propertyPreferredTenantTypeValue(int key) {
-    return _valueByKey(ARD_PREFERED_TENANT_TYPE, key.toString());
+    return _valueByKey(ARD_PREFERRED_TENANT_TYPE, key.toString());
   }
 
   Map propertyTransactionTypes() {
@@ -187,4 +145,12 @@ class RdmService {
   String propertyTransactionTypeValue(int key) {
     return _valueByKey(ARD_PROPERTY_TRANSACTION_TYPE, key.toString());
   }
+
+  Map propertyProfileTypes() {
+    return _keyValueByType(ARD_PROPERTY_PROFILE_TYPE);
+  }
+  Map propertyFaceTypes() {
+    return _keyValueByType(ARD_PROPERTY_FACE_TYPE);
+  }
+  
 }

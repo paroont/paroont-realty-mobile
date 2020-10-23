@@ -4,14 +4,18 @@ import 'package:paroont_realty_mobile/constant/url_const.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
+
 class PropertyService {
   static final PropertyService _instance = PropertyService._internal();
+  static final PropertyFilter filter = PropertyFilter();
 
   factory PropertyService() {
     return _instance;
   }
 
   PropertyService._internal();
+
 
   Future<CorePaginationData<PropertyDetail>> allProperties(PropertyFilter filter) async {
     CorePaginationData<PropertyDetail> pageData = CorePaginationData();
@@ -37,6 +41,11 @@ class PropertyService {
     }
     return pageData;
   }
+
+  PropertyFilter getFilter()
+{
+  return filter;
+}
 }
 
 

@@ -140,9 +140,10 @@ class PropertyDetail  with CoreObj{
 class PropertyFilter with CoreFilter{
   
    int propertyId = -99;
+   int propertyTypeGroupId = -99;
     List<int> propertyTypeIds =  List();
 
-  int transactionTypeId = -99;
+   List<int>  transactionTypeIds = List();
 
   String searchQuery;
 
@@ -155,8 +156,9 @@ class PropertyFilter with CoreFilter{
 
   DateTime availabilityTs;
 
-  String cityName;
-  String areaName;
+List<String>  cityIds = List();
+List<String>  areaIds = List();
+
   String pinCode;
 
   double minArea = -99;
@@ -195,15 +197,16 @@ class PropertyFilter with CoreFilter{
       'pageNo': pageNo?.toString(),
       'pageSize': pageSize?.toString(),
       'propertyTypeIds': propertyTypeIds?.join(","),
-      'transactionTypeId': transactionTypeId?.toString(),
+      'propertyTypeGroupId': propertyTypeGroupId?.toString(),
+      'transactionTypeIds': transactionTypeIds?.join(","),
       'searchQuery': searchQuery,
       'minBudget': minBudget?.toString(),
       'maxBudget': maxBudget?.toString(),
       'configurationIds': configurationIds?.join(","),
       'availabilityIds': availabilityIds?.join(","),
       'availabilityTs': availabilityTs?.toIso8601String(),
-      'cityName': cityName,
-      'areaName': areaName,
+      'cityIds': cityIds?.join(","),
+      'areaIds': areaIds?.join(","),
       'pinCode': pinCode,
       'minArea': minArea?.toString(),
       'maxArea': maxArea?.toString(),

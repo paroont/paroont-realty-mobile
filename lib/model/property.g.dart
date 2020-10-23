@@ -191,10 +191,14 @@ Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
 
 PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
   return PropertyFilter()
+    ..pageNo = json['pageNo'] as int
+    ..pageSize = json['pageSize'] as int
     ..propertyId = json['propertyId'] as int
+    ..propertyTypeGroupId = json['propertyTypeGroupId'] as int
     ..propertyTypeIds =
         (json['propertyTypeIds'] as List)?.map((e) => e as int)?.toList()
-    ..transactionTypeId = json['transactionTypeId'] as int
+    ..transactionTypeIds =
+        (json['transactionTypeIds'] as List)?.map((e) => e as int)?.toList()
     ..searchQuery = json['searchQuery'] as String
     ..minBudget = (json['minBudget'] as num)?.toDouble()
     ..maxBudget = (json['maxBudget'] as num)?.toDouble()
@@ -205,8 +209,8 @@ PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
     ..availabilityTs = json['availabilityTs'] == null
         ? null
         : DateTime.parse(json['availabilityTs'] as String)
-    ..cityName = json['cityName'] as String
-    ..areaName = json['areaName'] as String
+    ..cityIds = (json['cityIds'] as List)?.map((e) => e as String)?.toList()
+    ..areaIds = (json['areaIds'] as List)?.map((e) => e as String)?.toList()
     ..pinCode = json['pinCode'] as String
     ..minArea = (json['minArea'] as num)?.toDouble()
     ..maxArea = (json['maxArea'] as num)?.toDouble()
@@ -236,17 +240,20 @@ PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
     <String, dynamic>{
+      'pageNo': instance.pageNo,
+      'pageSize': instance.pageSize,
       'propertyId': instance.propertyId,
+      'propertyTypeGroupId': instance.propertyTypeGroupId,
       'propertyTypeIds': instance.propertyTypeIds,
-      'transactionTypeId': instance.transactionTypeId,
+      'transactionTypeIds': instance.transactionTypeIds,
       'searchQuery': instance.searchQuery,
       'minBudget': instance.minBudget,
       'maxBudget': instance.maxBudget,
       'configurationIds': instance.configurationIds,
       'availabilityIds': instance.availabilityIds,
       'availabilityTs': instance.availabilityTs?.toIso8601String(),
-      'cityName': instance.cityName,
-      'areaName': instance.areaName,
+      'cityIds': instance.cityIds,
+      'areaIds': instance.areaIds,
       'pinCode': instance.pinCode,
       'minArea': instance.minArea,
       'maxArea': instance.maxArea,

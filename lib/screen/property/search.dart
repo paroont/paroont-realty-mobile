@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/screen/property/search_result.dart';
-
+import 'package:paroont_realty_mobile/screen/property/search_filter.dart';
+import 'package:paroont_realty_mobile/service/property.dart';
 
 class PropertySearchMainWidget extends InheritedWidget {
-
   const PropertySearchMainWidget({
     Key key,
     @required this.searchResultState,
-    @required this.filter,
+    
     @required Widget child,
-  }) : assert(searchResultState != null),
-       assert(filter != null),
-      assert(child != null),
-       super(key: key, child: child);
+  })  : assert(searchResultState != null),
+       
+        assert(child != null),
+        super(key: key, child: child);
 
   final GlobalKey<PropertySearchResultScreenState> searchResultState;
-  final PropertyFilter filter;
+
 
   static PropertySearchMainWidget of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PropertySearchMainWidget>();
+    return context
+        .dependOnInheritedWidgetOfExactType<PropertySearchMainWidget>();
   }
 
   @override
-  bool updateShouldNotify(PropertySearchMainWidget old) => searchResultState != old.searchResultState && filter != old.filter;
+  bool updateShouldNotify(PropertySearchMainWidget old) =>
+      searchResultState != old.searchResultState;
 }
-
 
 class PropertySearchForm extends StatefulWidget {
   @override
@@ -58,11 +58,10 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
           ),
           IconButton(
             onPressed: () {
-              if (_formKey.currentState.validate()) {
-                // If the form is valid, display a Snackbar.
-                Scaffold.of(context)
-                    .showSnackBar(SnackBar(content: Text('Searching...')));
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PropertyFilterScreen()),
+              );
             },
             iconSize: 45,
             icon: Icon(
@@ -86,9 +85,12 @@ class _PropertySearchFormState extends State<PropertySearchForm> {
     if (selected != null) {
       setState(() {
         searchTextController.text = selected;
-        PropertySearchMainWidget.of(context).filter.searchQuery = selected;
-         
-        PropertySearchMainWidget.of(context).searchResultState.currentState.loadData();
+        PropertyService().getFilter().searchQuery = selected;
+        //PropertySearchMainWidget.of(context).filter.searchQuery = selected;
+        PropertySearchMainWidget.of(context)
+            .searchResultState
+            .currentState
+            .loadData();
       });
     }
   }
@@ -213,7 +215,5 @@ class _PropertySuggestionWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 
