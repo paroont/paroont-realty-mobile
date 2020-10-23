@@ -6,14 +6,14 @@ import 'dart:convert';
 
 class RdmService {
   static final RdmService _instance = RdmService._internal();
-  final Map<String, Map<String,String>> types = Map();
+  final Map<String, Map<String, String>> types = Map();
 
   factory RdmService() {
     return _instance;
   }
 
   Future<void> loadAllAppRefData() async {
-      var uri =  Uri.http(URL_REALTY_API_HOST, URL_REALTY_RDM_ARD);
+    var uri = Uri.http(URL_REALTY_API_HOST, URL_REALTY_RDM_ARD);
 
     final response = await http.get(uri);
     String errorMsg = 'Failed to load ref data.';
@@ -21,9 +21,10 @@ class RdmService {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonMap = json.decode(response.body);
       if (jsonMap['status'] == true) {
-       (jsonMap['data'] as List)
+        (jsonMap['data'] as List)
             .map((e) => AppRefData.fromJson(e))
-            .toList().forEach((e) => _updateRefData(e));
+            .toList()
+            .forEach((e) => _updateRefData(e));
       } else {
         throw Exception(errorMsg);
       }
@@ -58,7 +59,7 @@ class RdmService {
     return value;
   }
 
-  Map propertyTypes() {
+  Map<String, String>  propertyTypes() {
     return _keyValueByType(ARD_PROPERTY_TYPE);
   }
 
@@ -66,7 +67,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TYPE, key.toString());
   }
 
-  Map propertyTypeGroups() {
+  Map<String,String> propertyTypeGroups() {
     return _keyValueByType(ARD_PROPERTY_TYPE_GROUP);
   }
 
@@ -74,7 +75,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TYPE_GROUP, key.toString());
   }
 
-  Map propertyConfigTypes() {
+  Map<String,String> propertyConfigTypes() {
     return _keyValueByType(ARD_PROPERTY_CONFIGURATION_TYPE);
   }
 
@@ -82,7 +83,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_CONFIGURATION_TYPE, key.toString());
   }
 
-  Map propertyAreaUnitTypes() {
+  Map<String, String>  propertyAreaUnitTypes() {
     return _keyValueByType(ARD_PROPERTY_AREA_UNIT);
   }
 
@@ -90,7 +91,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AREA_UNIT, key.toString());
   }
 
-  Map propertyAreaTypes() {
+  Map<String, String>  propertyAreaTypes() {
     return _keyValueByType(ARD_PROPERTY_AREA_TYPE);
   }
 
@@ -98,7 +99,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AREA_TYPE, key.toString());
   }
 
-  Map propertyAvailableTypes() {
+  Map<String,String> propertyAvailableTypes() {
     return _keyValueByType(ARD_PROPERTY_AVAILABLE_TYPE);
   }
 
@@ -106,7 +107,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AVAILABLE_TYPE, key.toString());
   }
 
-  Map propertyFurnishTypes() {
+  Map<String,String> propertyFurnishTypes() {
     return _keyValueByType(ARD_PROPERTY_FURNISH_TYPE);
   }
 
@@ -114,7 +115,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_FURNISH_TYPE, key.toString());
   }
 
-  Map propertyAgeTypes() {
+  Map<String,String> propertyAgeTypes() {
     return _keyValueByType(ARD_PROPERTY_AGE_TYPE);
   }
 
@@ -122,7 +123,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AGE_TYPE, key.toString());
   }
 
-  Map propertyFloorNoTypes() {
+  Map<String,String> propertyFloorNoTypes() {
     return _keyValueByType(ARD_FLOOR_NO_TYPE);
   }
 
@@ -130,7 +131,7 @@ class RdmService {
     return _valueByKey(ARD_FLOOR_NO_TYPE, key.toString());
   }
 
-  Map propertyPreferredTenantTypes() {
+  Map<String,String> propertyPreferredTenantTypes() {
     return _keyValueByType(ARD_PREFERRED_TENANT_TYPE);
   }
 
@@ -138,7 +139,7 @@ class RdmService {
     return _valueByKey(ARD_PREFERRED_TENANT_TYPE, key.toString());
   }
 
-  Map propertyTransactionTypes() {
+  Map<String, String> propertyTransactionTypes() {
     return _keyValueByType(ARD_PROPERTY_TRANSACTION_TYPE);
   }
 
@@ -146,11 +147,18 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TRANSACTION_TYPE, key.toString());
   }
 
-  Map propertyProfileTypes() {
+  Map<String,String> propertyProfileTypes() {
     return _keyValueByType(ARD_PROPERTY_PROFILE_TYPE);
   }
-  Map propertyFaceTypes() {
+
+  Map<String,String> propertyFaceTypes() {
     return _keyValueByType(ARD_PROPERTY_FACE_TYPE);
   }
-  
+
+  Map<String, String>  propertySaleTypes() {
+    Map<String, String> dataMap = Map();
+    dataMap['1'] = 'New';
+    dataMap['2'] = 'Resale';
+    return dataMap;
+  }
 }

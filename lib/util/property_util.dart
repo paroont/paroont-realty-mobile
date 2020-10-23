@@ -13,10 +13,6 @@ String buildingTitle(PropertyDetail p) {
 String propertyArea(PropertyDetail p, int type) {
   String areaStr = '';
 
-  NumberFormat areaFormat = NumberFormat.decimalPattern();
-  areaFormat.maximumFractionDigits = 2;
-  areaFormat.minimumFractionDigits = 0;
-
   double area = 0;
   int unitId = 0;
   int areaTypeId = 0;
@@ -39,12 +35,12 @@ String propertyArea(PropertyDetail p, int type) {
     if (type == 1) {
       /*Sq Ft. */
       areaStr =
-          '${areaFormat.format(toSqFt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
+          '${unitAreaFormat().format(toSqFt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT)}';
     } else if (type == 2) {
       // Sq Mt.
       if (p.transactionTypeId == ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
         areaStr =
-            '(${areaFormat.format(toSqMt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
+            '(${unitAreaFormat().format(toSqMt(area, unitId))} ${RdmService().propertyAreaUnitTypeValue(ARD_PROPERTY_AREA_UNIT_KEY_SQ_MT)})';
       }
     } else if (type == 3) {
       // Type.
@@ -61,6 +57,13 @@ NumberFormat propertyPriceFormat() {
       locale: 'en_IN', symbol: '\u20B9', decimalDigits: 2);
   priceFormat.minimumFractionDigits = 0;
   return priceFormat;
+}
+
+NumberFormat unitAreaFormat() {
+  NumberFormat areaFormat = NumberFormat.decimalPattern();
+  areaFormat.maximumFractionDigits = 2;
+  areaFormat.minimumFractionDigits = 0;
+  return areaFormat;
 }
 
 String propertyBuyAmount(PropertyDetail p) {
@@ -134,6 +137,34 @@ double toSqFt(double area, int areaUnitId) {
   return sqFt;
 }
 
+double maxPropertyBudget(PropertyFilter filter) {
+  List<int> ids = filter.transactionTypeIds;
+  return ids.isEmpty || ids.contains(ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL)
+      ? maxSellBudget()
+      : maxRentBudget();
+}
+
+double minPropertyBudget(PropertyFilter filter) {
+  return 0;
+}
+
+double maxUnitArea(PropertyFilter filter) {
+  return 10000;
+}
+
+double minUnitArea(PropertyFilter filter) {
+  return 0;
+}
+
+
+double maxSellBudget() {
+  return 150000000;
+}
+
+double maxRentBudget() {
+  return 1000000;
+}
+
 double toSqMt(double area, int areaUnitId) {
   double sqFt = 0;
   if (ARD_PROPERTY_AREA_UNIT_KEY_SQ_FT == areaUnitId) {
@@ -159,7 +190,8 @@ List<String> propertySearchResultOutlines(PropertyDetail p) {
 }
 
 void _addTenentTypeOutline(PropertyDetail p, List<String> outlines) {
-  if (notNullInt(p.transactionTypeId) == ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
+  if (notNullInt(p.transactionTypeId) ==
+          ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
       notNullInt(p.transactionTypeId) == ARD_PROPERTY_TRANSACTION_TYPE_KEY_PG) {
     int key = notNullInt(p.tenantTypeId);
     if (key > 0) {
@@ -220,10 +252,7 @@ void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
       }
       outlines.add(value);
     }
+  } else if (tf > 0) {
+    outlines.add('Total Floor $tf');
   }
-    else if (tf > 0) {
-        outlines.add('Total Floor $tf');
-      }
-
-  
 }

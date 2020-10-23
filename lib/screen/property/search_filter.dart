@@ -3,8 +3,39 @@ import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/widget/common_widget.dart';
+import 'package:paroont_realty_mobile/util/property_util.dart';
 
-class PropertyFilterScreen extends StatelessWidget {
+
+
+class PropertyFilterScreen extends StatefulWidget {
+  @override
+  _PropertyFilterScreenState createState() => _PropertyFilterScreenState();
+}
+
+class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
+  RangeValues selectedBudgetRange = RangeValues(
+      minPropertyBudget(PropertyService().getFilter()),
+      maxPropertyBudget(PropertyService().getFilter()));
+
+  RangeValues selectedUnitAreaRange = RangeValues(
+      minUnitArea(PropertyService().getFilter()),
+      maxUnitArea(PropertyService().getFilter()));
+
+  List<int> selectedTransactionTypeIds = List();
+  List<int> selectedSaleTypeIds = List();
+  List<int> selectedUnitAreaTypeIds = List();
+  List<int> selectedUnitUnitTypeIds = List();
+
+  List<int> selectedPropertyTypeIds = List();
+  List<int> selectedPropertyTypeGroupIds = List();
+  List<int> selectedPropertyConfigTypeIds = List();
+  List<int> selectedFurnishTypeIds = List();
+  List<int> selectedAvailableTypeIds = List();
+  List<int> selectedPropertyAgeIds = List();
+
+  List<int> selectedPostedUserTypeIds = List();
+
+  List<int> selectedPropertyFaceTypeIds = List();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,51 +44,63 @@ class PropertyFilterScreen extends StatelessWidget {
       ),
       body: Container(
         child: ListView(children: [
-          _makeFilterTile(
-              context, 'Searching For:', _createTransactionTypesChip()),
+          _makeFilterTile(context, 'Searching For:',
+              _createTransactionTypesWidget(context)),
           Divider(),
-          _makeFilterTile(
-              context, 'Category:', _createPropertyTypeGroupsChip()),
-          Divider(),
-          _makeFilterTile(
-              context, 'Property Type:', _createPropertyTypesChip()),
-          Divider(),
-          _makeFilterTile(
-              context, 'Number of Bedrooms:', _createPropertyConfigTypesChip()),
 
+          _makeFilterTile(
+              context, 'Category:', _createPropertyTypeGroupsWidget(context)),
           Divider(),
+
+          _makeFilterTile(
+              context, 'Property Type:', _createPropertyTypesWidget(context)),
+          Divider(),
+
+          _makeFilterTile(context, 'Number of Bedrooms:',
+              _createPropertyConfigTypesWidget(context)),
+          Divider(),
+
           _makeFilterTile(
               context, 'City:', _createCityWidget(context)), // data ??
           Divider(),
+
           _makeFilterTile(
               context, 'Area:', _createAreaWidget(context)), // data ??
           Divider(),
+
           _makeFilterTile(context, 'Localities:', Container()), // data ??
           Divider(),
-          _makeFilterTile(context, 'Budget:', Container()), // data ??
-          Divider(),
-          _makeFilterTile(context, 'Unit Area:', Container()),
-          Divider(),
 
-          _makeFilterTile(context, 'Sale Type:', Container()), // data??
+          _makeFilterTile(
+              context, 'Budget:', _createBudgetWidget(context)), // data ??
           Divider(),
 
           _makeFilterTile(
-              context, 'Furnishing:', _createPropertyFurnishTypesChip()),
-          Divider(),
-          _makeFilterTile(
-              context, 'Availiability:', _createPropertyAvailableTypesChip()),
-
-          Divider(),
-          _makeFilterTile(
-              context, 'Property Age:', _createPropertyAgeTypesChip()),
+              context, 'Unit Area:', _createUnitAreaWidget(context)),
           Divider(),
 
-          _makeFilterTile(context, 'Posted By:', _createPostedUserTypesChip()),
-
-          Divider(),
           _makeFilterTile(
-              context, 'Property Facing:', _createPropertyFaceTypesChip()),
+              context, 'Sale Type:', _createSaleTypesChip(context)), // data??
+          Divider(),
+
+          _makeFilterTile(
+              context, 'Furnishing:', _createFurnishTypesWidget(context)),
+          Divider(),
+
+          _makeFilterTile(
+              context, 'Availability:', _createAvailableTypesWidget(context)),
+          Divider(),
+
+          _makeFilterTile(
+              context, 'Property Age:', _createPropertyAgeTypesWidget(context)),
+          Divider(),
+
+          _makeFilterTile(
+              context, 'Posted By:', _createPostedUserTypesWidget(context)),
+          Divider(),
+
+          _makeFilterTile(context, 'Property Facing:',
+              _createPropertyFaceTypesWidget(context)),
           Divider(),
         ]),
       ),
@@ -67,23 +110,453 @@ class PropertyFilterScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _makeFilterTile(BuildContext context, String title, Widget content) {
+    return ListTile(
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _titleWidget(context, title),
+        content,
+      ]),
+    );
+  }
+
+  Widget _titleWidget(BuildContext context, String myTitle) {
+    return Text(
+      myTitle,
+      // style: DefaultTextStyle.of(context).style,
+    );
+  }
+
+  void _updateMulitSelectTypes<T>(
+      List<T> selectedIds, List<T> finalIds, bool selected, T id) {
+    selected ? selectedIds.add(id) : selectedIds.remove(id);
+    //Clear existing data
+    finalIds.clear();
+    selectedIds?.forEach((element) {
+      finalIds.add(element);
+    });
+  }
+
+  void _updateSingleSelectTypes<T>(List<T> selectedIds, bool selected, T id) {
+    //Clear existing data
+    selectedIds.clear();
+    selected ? selectedIds.add(id) : selectedIds.remove(id);
+  }
+
+  Widget _createBudgetWidget(BuildContext context) {
+    return Container(
+      child: Column(children: [
+        Text(
+            '${propertyPriceFormat().format(selectedBudgetRange.start)} to ${propertyPriceFormat().format(selectedBudgetRange.end)}'),
+        RangeSlider(
+          values: selectedBudgetRange,
+          min: minPropertyBudget(PropertyService().getFilter()),
+          max: maxPropertyBudget(PropertyService().getFilter()),
+          onChanged: (newRange) {
+            _updateBudgetRange(newRange);
+          },
+        )
+      ]),
+    );
+  }
+
+  void _updateBudgetRange(RangeValues newRange) {
+    setState(() {
+      selectedBudgetRange = newRange;
+      PropertyService().getFilter().minBudget = selectedBudgetRange.start;
+      PropertyService().getFilter().maxBudget = selectedBudgetRange.end;
+    });
+  }
+
+  void _resetBudgetRange() {
+    selectedBudgetRange = RangeValues(
+        minPropertyBudget(PropertyService().getFilter()),
+        maxPropertyBudget(PropertyService().getFilter()));
+  }
+
+  Widget _createTransactionTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    RdmService().propertyTransactionTypes()?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedTransactionTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updateTransactionTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateTransactionTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedTransactionTypeIds,
+          PropertyService().getFilter().transactionTypeIds, isSelected, id);
+      _resetBudgetRange();
+    });
+  }
+
+  Widget _createSaleTypesChip(BuildContext context) {
+    List<Widget> chips = List();
+    RdmService().propertySaleTypes()?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedSaleTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updateSaleTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateSaleTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedSaleTypeIds,
+          PropertyService().getFilter().saleTypeIds, isSelected, id);
+    });
+  }
+
+  Widget _createUnitAreaWidget(BuildContext context) {
+    return Column(
+      children: [
+        _createUnitAreaTypeWidget(context),
+        Divider(),
+        _createUnitAreaRangeWidget(context),
+        Divider(),
+        _createUnitUnitTypeWidget(context),
+      ],
+    );
+  }
+
+  Widget _createUnitAreaTypeWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyAreaTypes())?.forEach((k, v) {
+      chips.add(
+        ChoiceChip(
+          label: Text(v),
+          selected: selectedUnitAreaTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            setState(() {
+              _updateUnitAreaTypes(isSelected, int.parse(k));
+            });
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateUnitAreaTypes(bool selected, int id) {
+    setState(() {
+      _updateSingleSelectTypes(selectedUnitAreaTypeIds, selected, id);
+      PropertyService().getFilter().areaTypeId =
+          selectedUnitAreaTypeIds.isNotEmpty ? id : ARD_COMMON_INVALID_KEY;
+    });
+  }
+
+  Widget _createUnitUnitTypeWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyAreaUnitTypes())?.forEach((k, v) {
+      chips.add(
+        ChoiceChip(
+          label: Text(v),
+          selected: selectedUnitUnitTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            setState(() {
+              _updateUnitUnitTypes(isSelected, int.parse(k));
+            });
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateUnitUnitTypes(bool selected, int id) {
+    setState(() {
+      _updateSingleSelectTypes(selectedUnitUnitTypeIds, selected, id);
+      PropertyService().getFilter().areaUnitId =
+          selectedUnitUnitTypeIds.isNotEmpty ? id : ARD_COMMON_INVALID_KEY;
+    });
+  }
+
+  Widget _createUnitAreaRangeWidget(BuildContext context) {
+    return Container(
+      child: Column(children: [
+        Text(
+            '${unitAreaFormat().format(selectedUnitAreaRange.start)} to ${unitAreaFormat().format(selectedUnitAreaRange.end)}'),
+        RangeSlider(
+          values: selectedUnitAreaRange,
+          min: minUnitArea(PropertyService().getFilter()),
+          max: maxUnitArea(PropertyService().getFilter()),
+          onChanged: (newRange) {
+            _updateUnitAreaRange(newRange);
+          },
+        )
+      ]),
+    );
+  }
+
+  void _updateUnitAreaRange(RangeValues newRange) {
+    setState(() {
+      selectedUnitAreaRange = newRange;
+      PropertyService().getFilter().minArea = selectedUnitAreaRange.start;
+      PropertyService().getFilter().maxArea = selectedUnitAreaRange.end;
+    });
+  }
+
+  Widget _createPropertyTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyTypes())?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedPropertyTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updatePropertyTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePropertyTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedPropertyTypeIds,
+          PropertyService().getFilter().propertyTypeIds, isSelected, id);
+    });
+  }
+
+  Widget _createPropertyConfigTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyConfigTypes())?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedPropertyConfigTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updatePropertyConfigTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePropertyConfigTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedPropertyConfigTypeIds,
+          PropertyService().getFilter().configurationIds, isSelected, id);
+    });
+  }
+
+  Widget _createFurnishTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyFurnishTypes())?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedFurnishTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updateFurnishTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateFurnishTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedFurnishTypeIds,
+          PropertyService().getFilter().furnishIds, isSelected, id);
+    });
+  }
+
+  Widget _createAvailableTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    Map<String, String> filterdData =
+        _createFilterDataMap(RdmService().propertyAvailableTypes());
+    //remove date option.
+    filterdData?.removeWhere(
+        (key, value) => ARD_PROPERTY_AVAILABLE_TYPE_KEY_DATE.toString() == key);
+
+    filterdData?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedAvailableTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updateAvailableTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updateAvailableTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedAvailableTypeIds,
+          PropertyService().getFilter().availabilityIds, isSelected, id);
+    });
+  }
+
+  Widget _createPropertyAgeTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyAgeTypes())?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedPropertyAgeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updatePropertyAgeTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePropertyAgeTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedPropertyAgeIds,
+          PropertyService().getFilter().propertyAgeIds, isSelected, id);
+    });
+  }
+
+  Widget _createPostedUserTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    Map<String, String> filterdData =
+        _createFilterDataMap(RdmService().propertyProfileTypes());
+    //remove date option.
+    filterdData?.removeWhere((key, value) =>
+        ARD_PROPERTY_PROFILE_TYPE_KEY_ADMIN.toString() == key ||
+        ARD_PROPERTY_PROFILE_TYPE_KEY_SUPPORT.toString() == key);
+
+    filterdData?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedPostedUserTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updatePostedUserTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePostedUserTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedPostedUserTypeIds,
+          PropertyService().getFilter().postedUserTypeIds, isSelected, id);
+    });
+  }
+
+  Widget _createPropertyFaceTypesWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyFaceTypes())?.forEach((k, v) {
+      chips.add(
+        FilterChip(
+          label: Text(v),
+          selected: selectedPropertyFaceTypeIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            _updatePropertyFaceTypes(isSelected, int.parse(k));
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePropertyFaceTypes(bool isSelected, int id) {
+    setState(() {
+      _updateMulitSelectTypes(selectedPropertyFaceTypeIds,
+          PropertyService().getFilter().faceIds, isSelected, id);
+    });
+  }
+
+  Widget _createPropertyTypeGroupsWidget(BuildContext context) {
+    List<Widget> chips = List();
+    _createFilterDataMap(RdmService().propertyTypeGroups())?.forEach((k, v) {
+      chips.add(
+        ChoiceChip(
+          label: Text(v),
+          selected: selectedPropertyTypeGroupIds.contains(int.parse(k)),
+          onSelected: (isSelected) {
+            setState(() {
+              _updatePropertyTypeGroups(isSelected, int.parse(k));
+            });
+          },
+        ),
+      );
+    });
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void _updatePropertyTypeGroups(bool selected, int id) {
+    setState(() {
+      _updateSingleSelectTypes(selectedPropertyTypeGroupIds, selected, id);
+      PropertyService().getFilter().propertyTypeGroupId =
+          selectedPropertyTypeGroupIds.isNotEmpty ? id : ARD_COMMON_INVALID_KEY;
+    });
+  }
+  // End of State
 }
 
-Widget _makeFilterTile(BuildContext context, String title, Widget content) {
-  return ListTile(
-    title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _titleWidget(context, title),
-      content,
-    ]),
-  );
+
+Map<T, String> _createFilterDataMap<T>(Map<T, String> dataMap) {
+  Map<T, String> filterdData =
+      dataMap?.map((key, value) => MapEntry(key, value));
+  filterdData?.removeWhere(
+      (key, value) => ARD_COMMON_KEY_NO_DATA.toString() == key.toString());
+  return filterdData;
 }
 
-Widget _titleWidget(BuildContext context, String myTitle) {
-  return Text(
-    myTitle,
-    // style: DefaultTextStyle.of(context).style,
-  );
-}
 
 Widget _createAreaWidget(BuildContext context) {
   Map<String, String> selectedDataMap = Map();
@@ -135,7 +608,6 @@ class _AreaWidgetState extends State<AreaWidget> {
     chips.add(DropdownButton<String>(
         value: _selectedItem,
         icon: Icon(Icons.add),
-        
         items: _buildSelectItems(context),
         onChanged: (value) {
           setState(() {
@@ -273,240 +745,7 @@ class SelectedCitiesChip extends PropertyFilterChip {
   }
 }
 
-Widget _createTransactionTypesChip() {
-  return TransactionTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyTransactionTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .transactionTypeIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class TransactionTypesChip extends PropertyFilterChip {
-  TransactionTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().transactionTypeIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPostedUserTypesChip() {
-  return PostedUserTypesChip(
-      dataMap: _createPostedUserTypesDataMap(),
-      selectedIds: PropertyService()
-          .getFilter()
-          .postedUserTypeIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-Map<String, String> _createPostedUserTypesDataMap() {
-  Map<String, String> filterdData =
-      _createFilterDataMap(RdmService().propertyProfileTypes());
-  //remove ADMIN AND support option.
-  filterdData?.removeWhere((key, value) =>
-      ARD_PROPERTY_PROFILE_TYPE_KEY_ADMIN.toString() == key ||
-      ARD_PROPERTY_PROFILE_TYPE_KEY_SUPPORT.toString() == key);
-  return filterdData;
-}
-
-class PostedUserTypesChip extends PropertyFilterChip {
-  PostedUserTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().postedUserTypeIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyTypesChip() {
-  return PropertyTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .propertyTypeIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class PropertyTypesChip extends PropertyFilterChip {
-  PropertyTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().propertyTypeIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyFaceTypesChip() {
-  return PropertyFaceTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyFaceTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .faceIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class PropertyFaceTypesChip extends PropertyFilterChip {
-  PropertyFaceTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().faceIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyAgeTypesChip() {
-  return PropertyAgeTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyAgeTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .propertyAgeIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class PropertyAgeTypesChip extends PropertyFilterChip {
-  PropertyAgeTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().propertyAgeIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyAvailableTypesChip() {
-  return PropertyAvailableTypesTypesChip(
-      dataMap: _createPropertyAvailableTypesDataMap(),
-      selectedIds: PropertyService()
-          .getFilter()
-          .availabilityIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-Map<String, String> _createPropertyAvailableTypesDataMap() {
-  Map<String, String> filterdData =
-      _createFilterDataMap(RdmService().propertyAvailableTypes());
-  //remove date option.
-  filterdData?.removeWhere(
-      (key, value) => ARD_PROPERTY_AVAILABLE_TYPE_KEY_DATE.toString() == key);
-  return filterdData;
-}
-
-class PropertyAvailableTypesTypesChip extends PropertyFilterChip {
-  PropertyAvailableTypesTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().availabilityIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyFurnishTypesChip() {
-  return PropertyFurnishTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyFurnishTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .furnishIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class PropertyFurnishTypesChip extends PropertyFilterChip {
-  PropertyFurnishTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().furnishIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyConfigTypesChip() {
-  return PropertyConfigTypesChip(
-      dataMap: _createFilterDataMap(RdmService().propertyConfigTypes()),
-      selectedIds: PropertyService()
-          .getFilter()
-          .configurationIds
-          .map((e) => e.toString())
-          .toList());
-}
-
-class PropertyConfigTypesChip extends PropertyFilterChip {
-  PropertyConfigTypesChip({Key key, Map dataMap, List selectedIds})
-      : super(key: key, dataMap: dataMap, selectedIds: selectedIds);
-  @override
-  void updateFilterData(BuildContext context) {
-    List<int> ids = PropertyService().getFilter().configurationIds;
-    ids.clear();
-    selectedIds?.forEach((element) {
-      ids.add(int.parse(element));
-    });
-  }
-}
-
-Widget _createPropertyTypeGroupsChip() {
-  List<String> selectedChoice = List();
-  selectedChoice
-      .add(PropertyService().getFilter().propertyTypeGroupId.toString());
-
-  return PropertyTypeGroupsChip(
-      dataMap: RdmService().propertyTypeGroups(),
-      selectedChoice: selectedChoice);
-}
-
-class PropertyTypeGroupsChip extends PropertyChoiceChip {
-  PropertyTypeGroupsChip({Key key, Map dataMap, List selectedChoice})
-      : super(key: key, dataMap: dataMap, selectedChoice: selectedChoice);
-  @override
-  void updateFilterData(BuildContext context) {
-    PropertyService().getFilter().propertyTypeGroupId =
-        takeSelectedChoice().isNotEmpty
-            ? int.parse(takeSelectedChoice())
-            : ARD_COMMON_INVALID_KEY;
-  }
-}
-
 // Property Common Chip Widget
-
-Map<String, String> _createFilterDataMap(Map<String, String> dataMap) {
-  Map<String, String> filterdData =
-      dataMap?.map((key, value) => MapEntry(key, value));
-  filterdData
-      ?.removeWhere((key, value) => ARD_COMMON_KEY_NO_DATA.toString() == key);
-  return filterdData;
-}
 
 class PropertyFilterChip extends StatefulWidget {
   final Map<String, String> dataMap;
