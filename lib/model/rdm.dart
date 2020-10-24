@@ -17,7 +17,10 @@ class AppRefData {
   String groupName;
   String subGroupName;
 
-  AppRefData();
+  
+AppRefData();
+AppRefData.keyValue(this.key, this.value) ;
+AppRefData.short(this.dataId, this.type, this.key, this.value) ;
 
   factory AppRefData.fromJson(Map<String, dynamic> json) =>
       _$AppRefDataFromJson(json);

@@ -1,5 +1,6 @@
 import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
+
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:intl/intl.dart';
@@ -256,3 +257,5 @@ void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
     outlines.add('Total Floor $tf');
   }
 }
+
+

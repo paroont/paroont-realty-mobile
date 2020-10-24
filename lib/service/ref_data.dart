@@ -59,7 +59,7 @@ class RdmService {
     return value;
   }
 
-  Map<String, String>  propertyTypes() {
+  Map<String, String> propertyTypes() {
     return _keyValueByType(ARD_PROPERTY_TYPE);
   }
 
@@ -67,7 +67,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TYPE, key.toString());
   }
 
-  Map<String,String> propertyTypeGroups() {
+  Map<String, String> propertyTypeGroups() {
     return _keyValueByType(ARD_PROPERTY_TYPE_GROUP);
   }
 
@@ -75,7 +75,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TYPE_GROUP, key.toString());
   }
 
-  Map<String,String> propertyConfigTypes() {
+  Map<String, String> propertyConfigTypes() {
     return _keyValueByType(ARD_PROPERTY_CONFIGURATION_TYPE);
   }
 
@@ -83,7 +83,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_CONFIGURATION_TYPE, key.toString());
   }
 
-  Map<String, String>  propertyAreaUnitTypes() {
+  Map<String, String> propertyAreaUnitTypes() {
     return _keyValueByType(ARD_PROPERTY_AREA_UNIT);
   }
 
@@ -91,7 +91,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AREA_UNIT, key.toString());
   }
 
-  Map<String, String>  propertyAreaTypes() {
+  Map<String, String> propertyAreaTypes() {
     return _keyValueByType(ARD_PROPERTY_AREA_TYPE);
   }
 
@@ -99,7 +99,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AREA_TYPE, key.toString());
   }
 
-  Map<String,String> propertyAvailableTypes() {
+  Map<String, String> propertyAvailableTypes() {
     return _keyValueByType(ARD_PROPERTY_AVAILABLE_TYPE);
   }
 
@@ -107,7 +107,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AVAILABLE_TYPE, key.toString());
   }
 
-  Map<String,String> propertyFurnishTypes() {
+  Map<String, String> propertyFurnishTypes() {
     return _keyValueByType(ARD_PROPERTY_FURNISH_TYPE);
   }
 
@@ -115,7 +115,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_FURNISH_TYPE, key.toString());
   }
 
-  Map<String,String> propertyAgeTypes() {
+  Map<String, String> propertyAgeTypes() {
     return _keyValueByType(ARD_PROPERTY_AGE_TYPE);
   }
 
@@ -123,7 +123,7 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_AGE_TYPE, key.toString());
   }
 
-  Map<String,String> propertyFloorNoTypes() {
+  Map<String, String> propertyFloorNoTypes() {
     return _keyValueByType(ARD_FLOOR_NO_TYPE);
   }
 
@@ -131,7 +131,7 @@ class RdmService {
     return _valueByKey(ARD_FLOOR_NO_TYPE, key.toString());
   }
 
-  Map<String,String> propertyPreferredTenantTypes() {
+  Map<String, String> propertyPreferredTenantTypes() {
     return _keyValueByType(ARD_PREFERRED_TENANT_TYPE);
   }
 
@@ -147,18 +147,28 @@ class RdmService {
     return _valueByKey(ARD_PROPERTY_TRANSACTION_TYPE, key.toString());
   }
 
-  Map<String,String> propertyProfileTypes() {
+  Map<String, String> propertyProfileTypes() {
     return _keyValueByType(ARD_PROPERTY_PROFILE_TYPE);
   }
 
-  Map<String,String> propertyFaceTypes() {
+  Map<String, String> propertyFaceTypes() {
     return _keyValueByType(ARD_PROPERTY_FACE_TYPE);
   }
 
-  Map<String, String>  propertySaleTypes() {
+  Map<String, String> propertySaleTypes() {
     Map<String, String> dataMap = Map();
     dataMap['1'] = 'New';
     dataMap['2'] = 'Resale';
     return dataMap;
+  }
+
+  List<AppRefData> propertyCityAreaLocalityTypes() {
+    List<AppRefData> data = List();
+    data.add(AppRefData.short(1, 'City', '1', 'Mumbai'));
+
+    data.add(AppRefData.short(2, 'City', '2', 'Thane'));
+
+    data.add(AppRefData.short(3, 'Area', '3', 'Mira Road'));
+    return data;
   }
 }

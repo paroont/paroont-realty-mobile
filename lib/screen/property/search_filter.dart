@@ -5,8 +5,6 @@ import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/widget/common_widget.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
 
-
-
 class PropertyFilterScreen extends StatefulWidget {
   @override
   _PropertyFilterScreenState createState() => _PropertyFilterScreenState();
@@ -36,6 +34,12 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
   List<int> selectedPostedUserTypeIds = List();
 
   List<int> selectedPropertyFaceTypeIds = List();
+
+  List<TextSearchData> selectedLocations = List();
+
+  TextSearchDelegate locationSearchDelegate =
+      TextSearchDelegate(_createLocationSearchData());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +73,10 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
           Divider(),
 
           _makeFilterTile(context, 'Localities:', Container()), // data ??
+          Divider(),
+
+          _makeFilterTile(context, 'City Area Localities:',
+              _createLocationSearchWidget(context)), // data ??
           Divider(),
 
           _makeFilterTile(
@@ -142,6 +150,67 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
     selectedIds.clear();
     selected ? selectedIds.add(id) : selectedIds.remove(id);
   }
+
+// Search begin////////////////
+
+  void removeSelectedLocations(TextSearchData data) {
+    setState(() {
+      selectedLocations.removeWhere((element) => element.dataId == data.dataId);
+    });
+  }
+
+  void showSearchPage(BuildContext context) async {
+    locationSearchDelegate.updateSelectedData(selectedLocations);
+    final List<TextSearchData> selected =
+        await showSearch<List<TextSearchData>>(
+      context: context,
+      delegate: locationSearchDelegate,
+    );
+    updateLocations(selected);
+  }
+
+  void updateLocations(List<TextSearchData> selected) {
+    if (null != selected) {
+      setState(() {
+        selectedLocations.clear();
+        selectedLocations.addAll(selected);
+      });
+    }
+  }
+
+  Widget _createLocationSearchWidget(BuildContext context) {
+    List<Widget> chips = List();
+
+    selectedLocations?.forEach((location) {
+      chips.add(Chip(
+        label: Text(location.title),
+        onDeleted: () {
+          removeSelectedLocations(location);
+        },
+      ));
+    });
+
+    if (chips.isNotEmpty) {
+      chips.add(Divider());
+    }
+    chips.add(TextFormField(
+        // controller: searchTextController,
+        decoration: InputDecoration(
+          hintText: 'Select City, Area, Localities.',
+          prefixIcon: Icon(Icons.search),
+        ),
+        readOnly: true,
+        onTap: () {
+          showSearchPage(context);
+        }));
+
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+// search end
 
   Widget _createBudgetWidget(BuildContext context) {
     return Container(
@@ -548,7 +617,6 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
   // End of State
 }
 
-
 Map<T, String> _createFilterDataMap<T>(Map<T, String> dataMap) {
   Map<T, String> filterdData =
       dataMap?.map((key, value) => MapEntry(key, value));
@@ -557,6 +625,14 @@ Map<T, String> _createFilterDataMap<T>(Map<T, String> dataMap) {
   return filterdData;
 }
 
+List<TextSearchData> _createLocationSearchData() {
+  List<TextSearchData> data = List();
+  RdmService().propertyCityAreaLocalityTypes().forEach((apd) {
+    data.add(TextSearchData.all(apd.dataId, apd.type, apd.key, apd.value));
+  });
+
+  return data;
+}
 
 Widget _createAreaWidget(BuildContext context) {
   Map<String, String> selectedDataMap = Map();
