@@ -14,7 +14,6 @@ class MultiSelectWidget extends StatefulWidget {
 class _MultiSelectWidgetState extends State<MultiSelectWidget> {
   TextEditingController searchTextController = new TextEditingController();
   Map<int, TextSearchData> filteredData = Map();
-
   @override
   void initState() {
     super.initState();
@@ -42,12 +41,25 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
     if (widget.textBasedSearch) {
       widgets.add(TextField(
         onChanged: (value) {
-          filterSearchResults(value);
+          //searchQuery = value;
+          filterSearchResults();
         },
         controller: searchTextController,
         decoration: InputDecoration(
           hintText: "Search",
           prefixIcon: Icon(Icons.search),
+          suffix: searchTextController.text.isNotEmpty
+              ? IconButton(
+                  tooltip: 'Clear',
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    //searchQuery = '';
+                    
+                    searchTextController.clear();
+                    filterSearchResults();
+                  },
+                )
+              : null,
         ),
       ));
     }
@@ -58,13 +70,12 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
     return Container(child: Column(children: widgets));
   }
 
-  void filterSearchResults(String query) {
+  void filterSearchResults() {
     setState(() {
       filteredData.clear();
-      if (query.isNotEmpty) {
+      if (searchTextController.text.isNotEmpty) {
         widget.widgetData.dataMap.forEach((key, value) {
-          if (value.value.toLowerCase().contains(query.toLowerCase()) ||
-              widget.widgetData.selectedIds.contains(key)) {
+          if (value.value.toLowerCase().contains(searchTextController.text.toLowerCase())) {
             filteredData[key] = value;
           }
         });
