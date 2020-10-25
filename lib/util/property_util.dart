@@ -4,6 +4,7 @@ import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:intl/intl.dart';
+import 'package:paroont_realty_mobile/model/common.dart';
 
 String buildingTitle(PropertyDetail p) {
   return notBlankStr(p.builderName)
@@ -157,7 +158,6 @@ double minUnitArea(PropertyFilter filter) {
   return 0;
 }
 
-
 double maxSellBudget() {
   return 150000000;
 }
@@ -258,4 +258,37 @@ void _addFloorNoOutline(PropertyDetail p, List<String> outlines) {
   }
 }
 
+Map<int, TextSearchData> takeLocationSearchData() {
+  Map<int, TextSearchData> data = Map();
+  data.addAll(takeLocationCitySearchData());
+  data.addAll(takeLocationAreaSearchData());
+  data.addAll(takePropertyLocalitySearchData());
+  return data;
+}
 
+Map<int, TextSearchData> takeLocationCitySearchData() {
+  Map<int, TextSearchData> data = Map();
+  RdmService().locationCityTypes().forEach((apd) {
+    data[apd.dataId] =
+        TextSearchData.all(apd.dataId, apd.type, apd.key, apd.value, apd.value, 'City');
+  });
+  return data;
+}
+
+Map<int, TextSearchData> takeLocationAreaSearchData() {
+  Map<int, TextSearchData> data = Map();
+  RdmService().locationAreaTypes().forEach((apd) {
+    data[apd.dataId] = TextSearchData.all(apd.dataId, apd.type, apd.key,
+        apd.value, RdmService().locationAreaTypeTitle(apd), 'Area');
+  });
+  return data;
+}
+
+Map<int, TextSearchData> takePropertyLocalitySearchData() {
+  Map<int, TextSearchData> data = Map();
+  RdmService().propertyLocalityTypes().forEach((apd) {
+    data[apd.dataId] = TextSearchData.all(apd.dataId, apd.type, apd.key,
+        apd.value, RdmService().propertyLocalityTypeTitle(apd), 'Locality');
+  });
+  return data;
+}

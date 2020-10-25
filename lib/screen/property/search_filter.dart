@@ -5,6 +5,8 @@ import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/widget/common_widget.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
 
+import 'package:paroont_realty_mobile/model/common.dart';
+
 class PropertyFilterScreen extends StatefulWidget {
   @override
   _PropertyFilterScreenState createState() => _PropertyFilterScreenState();
@@ -35,7 +37,9 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
 
   List<int> selectedPropertyFaceTypeIds = List();
 
-  List<TextSearchData> selectedLocations = List();
+  List<TextSearchData> selectedLocations2 = List();
+  List<int> selectedLocations = List();
+  Map<int, TextSearchData> allLocations = takeLocationSearchData();
 
   TextSearchDelegate locationSearchDelegate =
       TextSearchDelegate(_createLocationSearchData());
@@ -64,18 +68,7 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
               _createPropertyConfigTypesWidget(context)),
           Divider(),
 
-          _makeFilterTile(
-              context, 'City:', _createCityWidget(context)), // data ??
-          Divider(),
-
-          _makeFilterTile(
-              context, 'Area:', _createAreaWidget(context)), // data ??
-          Divider(),
-
-          _makeFilterTile(context, 'Localities:', Container()), // data ??
-          Divider(),
-
-          _makeFilterTile(context, 'City Area Localities:',
+          _makeFilterTile(context, 'City Area Locality:',
               _createLocationSearchWidget(context)), // data ??
           Divider(),
 
@@ -151,16 +144,85 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
     selected ? selectedIds.add(id) : selectedIds.remove(id);
   }
 
+// new search  beging
+
+  Widget _createLocationSearchWidget(BuildContext context) {
+    List<Widget> chips = List();
+    selectedLocations?.forEach((location) {
+
+      chips.add(Chip(
+        label: Text(allLocations[location].title),
+        onDeleted: () {
+          removeSelectedLocation(location);
+        },
+      ));
+    });
+
+    if (chips.isNotEmpty) {
+      chips.add(Divider());
+    }
+    chips.add(TextFormField(
+        // controller: searchTextController,
+        decoration: InputDecoration(
+          hintText: 'Select City, Area, Locality',
+          prefixIcon: Icon(Icons.search),
+        ),
+        readOnly: true,
+        onTap: () {
+          _locationSelection(context);
+        }));
+
+    return new Wrap(
+      children: chips,
+      spacing: 2,
+    );
+  }
+
+  void removeSelectedLocation(int id) {
+    setState(() {
+      selectedLocations.remove(id);
+    });
+  }
+
+  void updateSelectedLocations(List<int> ids) {
+    setState(() {
+      selectedLocations.clear();
+      selectedLocations.addAll(ids);
+    });
+    //TODO update filter
+  }
+
+  _locationSelection(BuildContext context) async {
+    MultiSelectData data = new MultiSelectData();
+    List<int> sids  = List();
+    sids.addAll(selectedLocations);
+    data.title = 'City Area Locality';
+    data.dataMap = allLocations;
+    data.selectedIds = sids;
+
+    final selectedIds = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiSelectWidget(widgetData: data)));
+    if (null != selectedIds) {
+      updateSelectedLocations(selectedIds);
+    }
+    print("_locationSelection_selectedIds: $selectedIds");
+  }
+
+// new search end ///
+
 // Search begin////////////////
 
-  void removeSelectedLocations(TextSearchData data) {
+  void removeSelectedLocations2(TextSearchData data) {
     setState(() {
-      selectedLocations.removeWhere((element) => element.dataId == data.dataId);
+      selectedLocations2
+          .removeWhere((element) => element.dataId == data.dataId);
     });
   }
 
   void showSearchPage(BuildContext context) async {
-    locationSearchDelegate.updateSelectedData(selectedLocations);
+    locationSearchDelegate.updateSelectedData(selectedLocations2);
     final List<TextSearchData> selected =
         await showSearch<List<TextSearchData>>(
       context: context,
@@ -172,20 +234,20 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
   void updateLocations(List<TextSearchData> selected) {
     if (null != selected) {
       setState(() {
-        selectedLocations.clear();
-        selectedLocations.addAll(selected);
+        selectedLocations2.clear();
+        selectedLocations2.addAll(selected);
       });
     }
   }
 
-  Widget _createLocationSearchWidget(BuildContext context) {
+  Widget _createLocationSearchWidget2(BuildContext context) {
     List<Widget> chips = List();
 
-    selectedLocations?.forEach((location) {
+    selectedLocations2?.forEach((location) {
       chips.add(Chip(
         label: Text(location.title),
         onDeleted: () {
-          removeSelectedLocations(location);
+          removeSelectedLocations2(location);
         },
       ));
     });
@@ -196,7 +258,7 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
     chips.add(TextFormField(
         // controller: searchTextController,
         decoration: InputDecoration(
-          hintText: 'Select City, Area, Localities.',
+          hintText: 'Select City, Area, Locality 2.',
           prefixIcon: Icon(Icons.search),
         ),
         readOnly: true,
@@ -627,9 +689,6 @@ Map<T, String> _createFilterDataMap<T>(Map<T, String> dataMap) {
 
 List<TextSearchData> _createLocationSearchData() {
   List<TextSearchData> data = List();
-  RdmService().propertyCityAreaLocalityTypes().forEach((apd) {
-    data.add(TextSearchData.all(apd.dataId, apd.type, apd.key, apd.value));
-  });
 
   return data;
 }
@@ -786,8 +845,9 @@ class _CityWidgetState extends State<CityWidget> {
     MultiSelectData data = new MultiSelectData();
 
     data.title = 'City';
-    data.dataMap = RdmService().propertyTypes();
-    data.selectedIds = widget.dataMap.entries.map((e) => e.key).toList();
+    data.dataMap = takeLocationSearchData();
+    data.selectedIds =
+        List(); //widget.dataMap.entries.map((e) => e.key).toList();
 
     final selectedCities = await Navigator.push(
         context,

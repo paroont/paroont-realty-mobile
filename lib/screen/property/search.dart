@@ -118,13 +118,7 @@ class _PropertySearchDelegate extends SearchDelegate<String> {
                 showSuggestions(context);
               },
             )
-          : IconButton(
-              icon: const Icon(Icons.mic),
-              tooltip: 'Voice input',
-              onPressed: () {
-                this.query = 'TBW: Get input from voice';
-              },
-            ),
+          : null
     ];
   }
 

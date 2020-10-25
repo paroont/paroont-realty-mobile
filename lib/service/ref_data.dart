@@ -162,13 +162,72 @@ class RdmService {
     return dataMap;
   }
 
-  List<AppRefData> propertyCityAreaLocalityTypes() {
+  List<AppRefData> locationCityTypes() {
     List<AppRefData> data = List();
-    data.add(AppRefData.short(1, 'City', '1', 'Mumbai'));
+    data.add(AppRefData.short(1, ARD_COMMON_CITY_NAME, 'MUMBAI', 'Mumbai'));
+    data.add(AppRefData.short(2, ARD_COMMON_CITY_NAME, 'THANE', 'Thane'));
+    data.add(AppRefData.short(
+        3, ARD_COMMON_CITY_NAME, 'NAVI_MUMBAI', 'Navi Mumbai'));
 
-    data.add(AppRefData.short(2, 'City', '2', 'Thane'));
-
-    data.add(AppRefData.short(3, 'Area', '3', 'Mira Road'));
     return data;
+  }
+
+  String locationCityTypeValue(String key) {
+    return locationCityType(key)?.value;
+  }
+
+  AppRefData locationCityType(String key) {
+    return locationCityTypes().firstWhere((element) => key == element.key);
+  }
+
+  List<AppRefData> locationAreaTypes() {
+    List<AppRefData> data = List();
+
+    data.add(AppRefData.long(
+        20, ARD_COMMON_AREA_NAME, 'MIRA_ROAD', 'Mira Road', 'MUMBAI'));
+    data.add(AppRefData.long(
+        21, ARD_COMMON_AREA_NAME, 'VASHI', 'Vashi', 'NAVI_MUMBAI'));
+    return data;
+  }
+
+  AppRefData locationAreaType(String key) {
+    return locationAreaTypes().firstWhere((element) => key == element.key);
+  }
+
+  String locationAreaTypeValue(String key) {
+    return locationAreaTypes()
+        .firstWhere((element) => key == element.key)
+        ?.value;
+  }
+
+  String locationAreaTypeTitle(AppRefData area) {
+    List<String> titleValues = List();
+    titleValues.add(area?.value);
+    titleValues.add(locationCityType(area?.groupName)?.value);
+    return titleValues.isEmpty ? '' : titleValues.join(', ');
+  }
+
+  String locationAreaTypeTitleByKey(String key) {
+    return locationAreaTypeTitle(locationAreaType(key));
+  }
+
+
+
+  List<AppRefData> propertyLocalityTypes() {
+    List<AppRefData> data = List();
+    data.add(AppRefData.long(
+        30, ARD_PROPERTY_LOCALITY_NAME, '1', 'SBI Bank', 'MIRA_ROAD'));
+        data.add(AppRefData.long(
+        31, ARD_PROPERTY_LOCALITY_NAME, '2', 'SBI Bank', 'VASHI'));
+    data.add(AppRefData.long(
+        32, ARD_PROPERTY_LOCALITY_NAME, '3', 'Galaxy Hospital', 'MIRA_ROAD'));
+    return data;
+  }
+
+  String propertyLocalityTypeTitle(AppRefData locality) {
+    List<String> titleValues = List();
+    titleValues.add(locality?.value);
+    titleValues.add(locationAreaTypeTitleByKey(locality?.groupName));
+    return titleValues.isEmpty ? '' : titleValues.join(', ');
   }
 }

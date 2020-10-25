@@ -21,6 +21,7 @@ class AppRefData {
 AppRefData();
 AppRefData.keyValue(this.key, this.value) ;
 AppRefData.short(this.dataId, this.type, this.key, this.value) ;
+AppRefData.long(this.dataId, this.type, this.key, this.value, this.groupName) ;
 
   factory AppRefData.fromJson(Map<String, dynamic> json) =>
       _$AppRefDataFromJson(json);

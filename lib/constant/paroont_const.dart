@@ -4,6 +4,10 @@ const int ARD_COMMON_KEY_NO_DATA = -1;
 
 const int ARD_COMMON_INVALID_KEY = -99;
 
+const String ARD_COMMON_CITY_NAME = "CITY_NAME";
+const String ARD_COMMON_AREA_NAME = "AREA_NAME";
+
+
 // APP_REF_DATA Property Constant
 const String ARD_PROPERTY_TYPE = 'PROPERTY_TYPE';
 const String ARD_PROPERTY_TYPE_GROUP = 'PROPERTY_TYPE_GROUP';
@@ -40,14 +44,15 @@ const int ARD_PROPERTY_PROFILE_TYPE_KEY_SUPPORT = 5;
 
 const String ARD_PROPERTY_FACE_TYPE = "PROPERTY_FACE_TYPE";
 
+
+const String ARD_PROPERTY_LOCALITY_NAME = "PROPERTY_LOCALITY_NAME";
+
+
 const String ARD_ = "TYPE_NAME";
 // APP REF DATA TYPE KEY
 
 
-
-
-
-
+// Property Details constant
 
 // DATE_FORMAT
 

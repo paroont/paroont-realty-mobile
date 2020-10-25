@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-
-class MultiSelectData {
-  Map<String, String> dataMap = Map();
-  List<String> selectedIds = List();
-  String title = '';
-}
+import 'package:paroont_realty_mobile/model/common.dart';
 
 class MultiSelectWidget extends StatefulWidget {
   final MultiSelectData widgetData;
+  final bool textBasedSearch = true;
 
   MultiSelectWidget({Key key, this.widgetData}) : super(key: key);
 
@@ -16,29 +12,76 @@ class MultiSelectWidget extends StatefulWidget {
 }
 
 class _MultiSelectWidgetState extends State<MultiSelectWidget> {
+  TextEditingController searchTextController = new TextEditingController();
+  Map<int, TextSearchData> filteredData = Map();
+
+  @override
+  void initState() {
+    super.initState();
+    filteredData.addAll(widget.widgetData.dataMap);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.widgetData.title),
       ),
-      body: ListView(
-        children: _buildTiles(context),
-      ),
+      body: _buildBody(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pop(context, widget.widgetData.selectedIds);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.done_outline),
       ),
     );
   }
 
+  Widget _buildBody(BuildContext context) {
+    List<Widget> widgets = List();
+    if (widget.textBasedSearch) {
+      widgets.add(TextField(
+        onChanged: (value) {
+          filterSearchResults(value);
+        },
+        controller: searchTextController,
+        decoration: InputDecoration(
+          hintText: "Search",
+          prefixIcon: Icon(Icons.search),
+        ),
+      ));
+    }
+    widgets.add(Expanded(
+        child: ListView(
+      children: _buildTiles(context),
+    )));
+    return Container(child: Column(children: widgets));
+  }
+
+  void filterSearchResults(String query) {
+    setState(() {
+      filteredData.clear();
+      if (query.isNotEmpty) {
+        widget.widgetData.dataMap.forEach((key, value) {
+          if (value.value.toLowerCase().contains(query.toLowerCase()) ||
+              widget.widgetData.selectedIds.contains(key)) {
+            filteredData[key] = value;
+          }
+        });
+      } else {
+        filteredData.addAll(widget.widgetData.dataMap);
+      }
+    });
+  }
+
   List<Widget> _buildTiles(BuildContext context) {
     List<Widget> tiles = List();
-    widget.widgetData.dataMap?.forEach((k, v) {
+    filteredData?.forEach((k, v) {
       tiles.add(CheckboxListTile(
-          title: Text(v),
+          title:
+              Text(null != v.title && v.title.isNotEmpty ? v.title : v.value),
+          subtitle: Text(
+              null != v.subTitle && v.subTitle.isNotEmpty ? v.subTitle : ''),
           value: widget.widgetData.selectedIds.contains(k),
           onChanged: (isSelected) {
             setState(() {
@@ -75,7 +118,8 @@ class _ClosableChipWidgetState extends State<ClosableChipWidget> {
     widget.widgetData.dataMap?.forEach((k, v) {
       chips.add(
         Chip(
-          label: Text(v),
+          label:
+              Text(null != v.title && v.title.isNotEmpty ? v.title : v.value),
           onDeleted: () {
             setState(() {
               widget.widgetData.dataMap.removeWhere((key, value) => key == k);
@@ -93,16 +137,6 @@ class _ClosableChipWidgetState extends State<ClosableChipWidget> {
 }
 
 // SearchWidget
-
-class TextSearchData {
-  int dataId = -1;
-  String type = '';
-  String key = '';
-  String title = '';
-  TextSearchData(this.title);
-  TextSearchData.keyTitle(this.key, this.title);
-  TextSearchData.all(this.dataId, this.type, this.key, this.title);
-}
 
 class TextSearchDelegate extends SearchDelegate<List<TextSearchData>> {
   final List<TextSearchData> searchData;
