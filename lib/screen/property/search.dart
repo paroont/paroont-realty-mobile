@@ -3,6 +3,7 @@ import 'package:paroont_realty_mobile/screen/property/search_result.dart';
 import 'package:paroont_realty_mobile/screen/property/search_filter.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 
+
 class PropertySearchMainWidget extends InheritedWidget {
   const PropertySearchMainWidget({
     Key key,

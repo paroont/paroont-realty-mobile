@@ -17,7 +17,7 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
   @override
   void initState() {
     super.initState();
-    filteredData.addAll(widget.widgetData.dataMap);
+    filteredData.addAll(widget.widgetData.allData);
   }
 
   @override
@@ -29,7 +29,7 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
       body: _buildBody(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context, widget.widgetData.selectedIds);
+          Navigator.pop(context, widget.widgetData.selectedData);
         },
         child: Icon(Icons.done_outline),
       ),
@@ -74,13 +74,13 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
     setState(() {
       filteredData.clear();
       if (searchTextController.text.isNotEmpty) {
-        widget.widgetData.dataMap.forEach((key, value) {
+        widget.widgetData.allData.forEach((key, value) {
           if (value.value.toLowerCase().contains(searchTextController.text.toLowerCase())) {
             filteredData[key] = value;
           }
         });
       } else {
-        filteredData.addAll(widget.widgetData.dataMap);
+        filteredData.addAll(widget.widgetData.allData);
       }
     });
   }
@@ -93,12 +93,12 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
               Text(null != v.title && v.title.isNotEmpty ? v.title : v.value),
           subtitle: Text(
               null != v.subTitle && v.subTitle.isNotEmpty ? v.subTitle : ''),
-          value: widget.widgetData.selectedIds.contains(k),
+          value: widget.widgetData.selectedData.containsKey(k),
           onChanged: (isSelected) {
             setState(() {
               isSelected
-                  ? widget.widgetData.selectedIds.add(k)
-                  : widget.widgetData.selectedIds.remove(k);
+                  ? widget.widgetData.selectedData[k] = v
+                  : widget.widgetData.selectedData.remove(k);
             });
           }));
     });
@@ -126,14 +126,14 @@ class _ClosableChipWidgetState extends State<ClosableChipWidget> {
 
   Widget _buildChips(BuildContext context) {
     List<Widget> chips = List();
-    widget.widgetData.dataMap?.forEach((k, v) {
+    widget.widgetData.allData.forEach((k, v) {
       chips.add(
         Chip(
           label:
               Text(null != v.title && v.title.isNotEmpty ? v.title : v.value),
           onDeleted: () {
             setState(() {
-              widget.widgetData.dataMap.removeWhere((key, value) => key == k);
+              widget.widgetData.allData.removeWhere((key, value) => key == k);
               widget.updateFilterData(context);
             });
           },

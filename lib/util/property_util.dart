@@ -269,8 +269,8 @@ Map<int, TextSearchData> takeLocationSearchData() {
 Map<int, TextSearchData> takeLocationCitySearchData() {
   Map<int, TextSearchData> data = Map();
   RdmService().locationCityTypes().forEach((apd) {
-    data[apd.dataId] =
-        TextSearchData.all(apd.dataId, apd.type, apd.key, apd.value, apd.value, 'City');
+    data[apd.dataId] = TextSearchData.all(
+        apd.dataId, apd.type, apd.key, apd.value, apd.value, 'City');
   });
   return data;
 }
@@ -291,4 +291,22 @@ Map<int, TextSearchData> takePropertyLocalitySearchData() {
         apd.value, RdmService().propertyLocalityTypeTitle(apd), 'Locality');
   });
   return data;
+}
+
+TextSearchData takeTextSearchDataByKey(Map<int, TextSearchData> data, key) {
+  return data.values.firstWhere((d) => d.key == key, orElse: null);
+}
+
+Map<T, String> createFilterDataMap<T>(Map<T, String> dataMap) {
+  Map<T, String> filterdData =
+      dataMap?.map((key, value) => MapEntry(key, value));
+  filterdData?.removeWhere(
+      (key, value) => ARD_COMMON_KEY_NO_DATA.toString() == key.toString());
+  return filterdData;
+}
+
+bool isRental(PropertyDetail p) {
+  return notNullInt(p.transactionTypeId) ==
+          ARD_PROPERTY_TRANSACTION_TYPE_KEY_RENT ||
+      notNullInt(p.transactionTypeId) == ARD_PROPERTY_TRANSACTION_TYPE_KEY_PG;
 }

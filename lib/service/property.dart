@@ -9,7 +9,7 @@ import 'dart:convert';
 class PropertyService {
   static final PropertyService _instance = PropertyService._internal();
   static final PropertyFilter filter = PropertyFilter();
-
+ static final PropertyFilter myFilter = PropertyFilter();
   factory PropertyService() {
     return _instance;
   }
@@ -46,6 +46,11 @@ class PropertyService {
 {
   return filter;
 }
+  PropertyFilter getMyFilter()
+{
+  return myFilter;
+}
+
 }
 
 

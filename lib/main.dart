@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:paroont_realty_mobile/screen/home.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 
-Future<void> main()  async{
+Future<void> main() async {
   await RdmService().loadAllAppRefData();
   runApp(RealtyApp());
 }
@@ -12,71 +12,12 @@ class RealtyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome ',
-      theme: ThemeData(primaryColor: Colors.red,  primaryColorLight: Colors.redAccent,
-     ),
-      
-      home: Scaffold(
-        appBar: AppBar(title: Text("Paroont")),
-        body: HomeBody(),
-        primary: true,
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              title: Text("Home"),
-              icon: Icon(Icons.home),
-            ),
-            BottomNavigationBarItem(
-              title: Text("Search"),
-              icon: Icon(Icons.search),
-            ),
-            BottomNavigationBarItem(
-              title: Text("Add"),
-              icon: Icon(Icons.add_box),
-            ),
-          ],
-          
-        ),
-        drawer: Drawer(
-  elevation: 16.0,
-  child: Column(
-    children: <Widget>[
-      UserAccountsDrawerHeader(
-        accountName: Text("xyz"),
-        accountEmail: Text("xyz@gmail.com"),
-        currentAccountPicture: CircleAvatar(
-          backgroundColor: Colors.white,
-          child: Text("xyz"),
-        ),
-        otherAccountsPictures: <Widget>[
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Text("abc"),
-          )
-        ],
+      theme: ThemeData(
+        primaryColor: Colors.red,
+        primaryColorLight: Colors.redAccent,
       ),
-      ListTile(
-        title: new Text("All Inboxes"),
-        leading: new Icon(Icons.mail),
-      ),
-      Divider(
-        height: 0.1,
-      ),
-      ListTile(
-        title: new Text("Primary"),
-        leading: new Icon(Icons.inbox),
-      ),
-      ListTile(
-        title: new Text("Social"),
-        leading: new Icon(Icons.people),
-      ),
-      ListTile(
-        title: new Text("Promotions"),
-        leading: new Icon(Icons.local_offer),
-      )
-    ],
-  ),
-),
-      ),
+      home: HomeWidget(),
     );
   }
 }
+

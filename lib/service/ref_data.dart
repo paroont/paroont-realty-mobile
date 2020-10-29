@@ -6,7 +6,8 @@ import 'dart:convert';
 
 class RdmService {
   static final RdmService _instance = RdmService._internal();
-  final Map<String, Map<String, String>> types = Map();
+  final Map<String, Map<String, String>> typeKeyValues = Map();
+  final Map<String, Map<String, AppRefData>> typeKeyDatas = Map();
 
   factory RdmService() {
     return _instance;
@@ -35,24 +36,39 @@ class RdmService {
 
   void _updateRefData(AppRefData ard) {
     if (null != ard) {
-      var typeMap = types[ard.type];
+      var typeMap = typeKeyValues[ard.type];
       if (null == typeMap) {
         typeMap = Map();
-        types[ard.type] = typeMap;
+        typeKeyValues[ard.type] = typeMap;
+      }
+
+      var typeDataMap = typeKeyDatas[ard.type];
+      if (null == typeDataMap) {
+        typeDataMap = Map();
+        typeKeyDatas[ard.type] = typeDataMap;
       }
       typeMap[ard.key] = ard.value;
+      typeDataMap[ard.key] = ard;
     }
   }
 
   RdmService._internal();
 
   Map _keyValueByType(String type) {
-    return types[type];
+    return typeKeyValues[type];
+  }
+
+  Map<String, AppRefData> _dataMapByType(String type) {
+    return typeKeyDatas[type];
+  }
+
+  List<AppRefData> _dataListByType(String type) {
+    return _dataMapByType(type).values.toList();
   }
 
   String _valueByKey(String type, String key) {
     String value = '';
-    Map map = types[type];
+    Map map = typeKeyValues[type];
     if (null != map) {
       value = map[key];
     }
@@ -127,6 +143,15 @@ class RdmService {
     return _keyValueByType(ARD_FLOOR_NO_TYPE);
   }
 
+  Map<String, String> postPropertyFloorNoTypes() {
+     Map<String, String> keyValues = Map();
+    keyValues.addAll(propertyFloorNoTypes());
+    keyValues?.removeWhere((key, value) =>
+        ARD_FLOOR_NO_TYPE_KEY_NO.toString() == key);
+    return keyValues;
+  }
+
+
   String propertyFloorNoTypeValue(int key) {
     return _valueByKey(ARD_FLOOR_NO_TYPE, key.toString());
   }
@@ -151,6 +176,15 @@ class RdmService {
     return _keyValueByType(ARD_PROPERTY_PROFILE_TYPE);
   }
 
+  Map<String, String> postPropertyProfileTypes() {
+    Map<String, String> profileTypes = Map();
+    profileTypes.addAll(propertyProfileTypes());
+    profileTypes?.removeWhere((key, value) =>
+        ARD_PROPERTY_PROFILE_TYPE_KEY_ADMIN.toString() == key ||
+        ARD_PROPERTY_PROFILE_TYPE_KEY_SUPPORT.toString() == key);
+    return profileTypes;
+  }
+
   Map<String, String> propertyFaceTypes() {
     return _keyValueByType(ARD_PROPERTY_FACE_TYPE);
   }
@@ -163,13 +197,7 @@ class RdmService {
   }
 
   List<AppRefData> locationCityTypes() {
-    List<AppRefData> data = List();
-    data.add(AppRefData.short(1, ARD_COMMON_CITY_NAME, 'MUMBAI', 'Mumbai'));
-    data.add(AppRefData.short(2, ARD_COMMON_CITY_NAME, 'THANE', 'Thane'));
-    data.add(AppRefData.short(
-        3, ARD_COMMON_CITY_NAME, 'NAVI_MUMBAI', 'Navi Mumbai'));
-
-    return data;
+    return _dataListByType(ARD_COMMON_CITY_NAME);
   }
 
   String locationCityTypeValue(String key) {
@@ -181,13 +209,7 @@ class RdmService {
   }
 
   List<AppRefData> locationAreaTypes() {
-    List<AppRefData> data = List();
-
-    data.add(AppRefData.long(
-        20, ARD_COMMON_AREA_NAME, 'MIRA_ROAD', 'Mira Road', 'MUMBAI'));
-    data.add(AppRefData.long(
-        21, ARD_COMMON_AREA_NAME, 'VASHI', 'Vashi', 'NAVI_MUMBAI'));
-    return data;
+    return _dataListByType(ARD_COMMON_AREA_NAME);
   }
 
   AppRefData locationAreaType(String key) {
@@ -211,17 +233,8 @@ class RdmService {
     return locationAreaTypeTitle(locationAreaType(key));
   }
 
-
-
   List<AppRefData> propertyLocalityTypes() {
-    List<AppRefData> data = List();
-    data.add(AppRefData.long(
-        30, ARD_PROPERTY_LOCALITY_NAME, '1', 'SBI Bank', 'MIRA_ROAD'));
-        data.add(AppRefData.long(
-        31, ARD_PROPERTY_LOCALITY_NAME, '2', 'SBI Bank', 'VASHI'));
-    data.add(AppRefData.long(
-        32, ARD_PROPERTY_LOCALITY_NAME, '3', 'Galaxy Hospital', 'MIRA_ROAD'));
-    return data;
+    return _dataListByType(ARD_COMMON_LOCALITY_NAME);
   }
 
   String propertyLocalityTypeTitle(AppRefData locality) {

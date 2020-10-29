@@ -4,7 +4,7 @@ import 'package:paroont_realty_mobile/model/common.dart';
 part 'property.g.dart';
 
 @JsonSerializable()
-class PropertyDetail  with CoreObj{
+class PropertyDetail with CoreObj {
   int templateId;
   String projectName;
 
@@ -25,7 +25,10 @@ class PropertyDetail  with CoreObj{
 
   String addressLine1;
   String addressLine2;
+  String cityId;
   String cityName;
+  String areaId;
+  String areaName;
   String stateName;
   String landmarkName;
   String pinCode;
@@ -128,6 +131,14 @@ class PropertyDetail  with CoreObj{
   int allInclusiveAmount = -1;
   int taxAndGovChargeIncluded = -1;
 
+  String postedBy;
+  String postedByName;
+  DateTime postedTs;
+  int postedUserTypeId;
+  DateTime dealTs;
+  
+  int saleTypeId;
+
   PropertyDetail();
 
   factory PropertyDetail.fromJson(Map<String, dynamic> json) =>
@@ -137,27 +148,25 @@ class PropertyDetail  with CoreObj{
 }
 
 @JsonSerializable()
-class PropertyFilter with CoreFilter{
-  
-   int propertyId = -99;
-   int propertyTypeGroupId = -99;
-    List<int> propertyTypeIds =  List();
+class PropertyFilter with CoreFilter {
+  int propertyId = -99;
+  int propertyTypeGroupId = -99;
+  List<int> propertyTypeIds = List();
 
-   List<int>  transactionTypeIds = List();
+  List<int> transactionTypeIds = List();
 
   String searchQuery;
 
   double minBudget = -99;
   double maxBudget = -99;
 
-
-   List<int> configurationIds =  List();
-    List<int> availabilityIds =  List();
+  List<int> configurationIds = List();
+  List<int> availabilityIds = List();
 
   DateTime availabilityTs;
 
-List<String>  cityIds = List();
-List<String>  areaIds = List();
+  List<String> cityIds = List();
+  List<String> areaIds = List();
 
   String pinCode;
 
@@ -170,17 +179,16 @@ List<String>  areaIds = List();
   int minFloorNo = -99;
   int maxFloorNo = -99;
   int floorId = -99;
-    List<int> saleTypeIds =  List();
+  List<int> saleTypeIds = List();
 
-    List<int> faceIds =  List();
-    List<int> furnishIds =  List();
-    List<int> postedUserTypeIds =  List();
-    List<int> noOfBathrooms =  List();
+  List<int> faceIds = List();
+  List<int> furnishIds = List();
+  List<int> postedUserTypeIds = List();
+  List<int> noOfBathrooms = List();
 
-    List<int> propertyAgeIds =  List();
+  List<int> propertyAgeIds = List();
 
-      List<int> tenantTypeIds =  List();
-
+  List<int> tenantTypeIds = List();
 
   DateTime postedTs;
   String localityIds;

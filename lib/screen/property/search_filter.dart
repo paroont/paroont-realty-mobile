@@ -38,7 +38,7 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
   List<int> selectedPropertyFaceTypeIds = List();
 
   List<TextSearchData> selectedLocations2 = List();
-  List<int> selectedLocations = List();
+  Map<int, TextSearchData> selectedLocations = Map();
   Map<int, TextSearchData> allLocations = takeLocationSearchData();
 
   TextSearchDelegate locationSearchDelegate =
@@ -148,15 +148,16 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
 
   Widget _createLocationSearchWidget(BuildContext context) {
     List<Widget> chips = List();
-    selectedLocations?.forEach((location) {
-
+    selectedLocations?.forEach((key, value) {
       chips.add(Chip(
-        label: Text(allLocations[location].title),
+        label: Text(value.title),
         onDeleted: () {
-          removeSelectedLocation(location);
+          removeSelectedLocation(key);
         },
       ));
     });
+
+    
 
     if (chips.isNotEmpty) {
       chips.add(Divider());
@@ -184,30 +185,30 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
     });
   }
 
-  void updateSelectedLocations(List<int> ids) {
+  void updateSelectedLocations(Map<int,TextSearchData> selectedData) {
     setState(() {
       selectedLocations.clear();
-      selectedLocations.addAll(ids);
+      selectedLocations.addAll(selectedData);
     });
     //TODO update filter
   }
 
   _locationSelection(BuildContext context) async {
     MultiSelectData data = new MultiSelectData();
-    List<int> sids  = List();
+    Map<int, TextSearchData> sids  = Map();
     sids.addAll(selectedLocations);
     data.title = 'City Area Locality';
-    data.dataMap = allLocations;
-    data.selectedIds = sids;
+    data.allData = allLocations;
+    data.selectedData = sids;
 
-    final selectedIds = await Navigator.push(
+    final selectedData = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => MultiSelectWidget(widgetData: data)));
-    if (null != selectedIds) {
-      updateSelectedLocations(selectedIds);
+    if (null != selectedData) {
+      updateSelectedLocations(selectedData);
     }
-    print("_locationSelection_selectedIds: $selectedIds");
+    print("_locationSelection_selectedIds: $selectedData");
   }
 
 // new search end ///
@@ -591,14 +592,7 @@ class _PropertyFilterScreenState extends State<PropertyFilterScreen> {
 
   Widget _createPostedUserTypesWidget(BuildContext context) {
     List<Widget> chips = List();
-    Map<String, String> filterdData =
-        _createFilterDataMap(RdmService().propertyProfileTypes());
-    //remove date option.
-    filterdData?.removeWhere((key, value) =>
-        ARD_PROPERTY_PROFILE_TYPE_KEY_ADMIN.toString() == key ||
-        ARD_PROPERTY_PROFILE_TYPE_KEY_SUPPORT.toString() == key);
-
-    filterdData?.forEach((k, v) {
+    RdmService().postPropertyProfileTypes()?.forEach((k, v) {
       chips.add(
         FilterChip(
           label: Text(v),
@@ -781,92 +775,6 @@ class _AreaWidgetState extends State<AreaWidget> {
   }
 }
 
-Widget _createCityWidget(BuildContext context) {
-  Map<String, String> selectedDataMap = Map();
-  PropertyService().getFilter().cityIds.forEach((element) {
-    selectedDataMap[element] = RdmService().propertyTypes()[element];
-  });
-  return CityWidget(dataMap: selectedDataMap);
-}
-
-class CityWidget extends StatefulWidget {
-  final Map<String, String> dataMap;
-  CityWidget({Key key, this.dataMap}) : super(key: key);
-  @override
-  _CityWidgetState createState() => _CityWidgetState();
-  void updateFilterData(BuildContext context) {
-    List<String> ids = PropertyService().getFilter().cityIds;
-    ids.clear();
-    dataMap?.forEach((key, value) {
-      ids.add(key);
-    });
-  }
-}
-
-class _CityWidgetState extends State<CityWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: _buildChips(context),
-    );
-  }
-
-  Widget _buildChips(BuildContext context) {
-    List<Widget> chips = List();
-    widget.dataMap?.forEach((k, v) {
-      chips.add(
-        Chip(
-          label: Text(v),
-          onDeleted: () {
-            setState(() {
-              widget.dataMap.removeWhere((key, value) => key == k);
-              widget.updateFilterData(context);
-            });
-          },
-        ),
-      );
-    });
-
-    chips.add(ActionChip(
-        label: Text('Add City'),
-        avatar: CircleAvatar(
-          child: Icon(Icons.add),
-        ),
-        onPressed: () {
-          _citySelection(context);
-        }));
-    return new Wrap(
-      children: chips,
-      spacing: 2,
-    );
-  }
-
-  _citySelection(BuildContext context) async {
-    MultiSelectData data = new MultiSelectData();
-
-    data.title = 'City';
-    data.dataMap = takeLocationSearchData();
-    data.selectedIds =
-        List(); //widget.dataMap.entries.map((e) => e.key).toList();
-
-    final selectedCities = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MultiSelectWidget(widgetData: data)));
-    if (null != selectedCities) {
-      setState(() {
-        List<String> ids = PropertyService().getFilter().cityIds;
-        ids.clear();
-        widget.dataMap.clear();
-        selectedCities?.forEach((key) {
-          ids.add(key);
-          widget.dataMap[key] = RdmService().propertyTypes()[key];
-        });
-      });
-    }
-    print("Selected_Cities: $selectedCities");
-  }
-}
 
 class SelectedCitiesChip extends PropertyFilterChip {
   SelectedCitiesChip({Key key, Map dataMap, List selectedIds})

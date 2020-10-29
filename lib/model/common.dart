@@ -15,8 +15,8 @@ List<T> data = List();
 
 
 class MultiSelectData {
-  Map<int, TextSearchData> dataMap = Map();
-  List<int> selectedIds = List();
+  Map<int, TextSearchData> allData = Map();
+  Map<int, TextSearchData> selectedData = Map();
   String title = '';
 }
 
