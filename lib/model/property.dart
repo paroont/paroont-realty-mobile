@@ -68,7 +68,7 @@ class PropertyDetail with CoreObj {
   int fireAlarm = -1;
 
   int petFriendly = -1;
-  int propertyId;
+  int propertyId = 0;
   int transactionTypeId;
 
   int configurationId;
@@ -184,6 +184,7 @@ class PropertyFilter with CoreFilter {
   List<int> faceIds = List();
   List<int> furnishIds = List();
   List<int> postedUserTypeIds = List();
+  List<String> postedByIds = new List();
   List<int> noOfBathrooms = List();
 
   List<int> propertyAgeIds = List();
@@ -228,6 +229,7 @@ class PropertyFilter with CoreFilter {
       'faceIds': faceIds?.join(","),
       'furnishIds': furnishIds?.join(","),
       'postedUserTypeIds': postedUserTypeIds?.join(","),
+      'postedByIds': postedByIds?.join(","),
       'noOfBathrooms': noOfBathrooms?.join(","),
       'propertyAgeIds': propertyAgeIds?.join(","),
       'tenantTypeIds': tenantTypeIds?.join(","),
@@ -235,4 +237,16 @@ class PropertyFilter with CoreFilter {
       'localityIds': localityIds,
     };
   }
+}
+
+
+@JsonSerializable()
+class PropertySaveResponse with CoreResponse {
+  int propertyId;
+  PropertySaveResponse();
+
+  factory PropertySaveResponse.fromJson(Map<String, dynamic> json) =>
+      _$PropertySaveResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PropertySaveResponseToJson(this);
 }

@@ -4,6 +4,8 @@ const int ARD_COMMON_KEY_NO_DATA = -1;
 const int ARD_COMMON_KEY_YES = 1;
 const int ARD_COMMON_KEY_NO = 2;
 
+const int ARD_COMMON_KEY_ACTIVE = 1;
+
 const int ARD_COMMON_INVALID_KEY = -99;
 
 

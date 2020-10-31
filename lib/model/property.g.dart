@@ -8,6 +8,15 @@ part of 'property.dart';
 
 PropertyDetail _$PropertyDetailFromJson(Map<String, dynamic> json) {
   return PropertyDetail()
+    ..statusId = json['statusId'] as int
+    ..createdBy = json['createdBy'] as String
+    ..createdTs = json['createdTs'] == null
+        ? null
+        : DateTime.parse(json['createdTs'] as String)
+    ..updatedBy = json['updatedBy'] as String
+    ..updatedTs = json['updatedTs'] == null
+        ? null
+        : DateTime.parse(json['updatedTs'] as String)
     ..templateId = json['templateId'] as int
     ..projectName = json['projectName'] as String
     ..propertyTypeId = json['propertyTypeId'] as int
@@ -23,7 +32,10 @@ PropertyDetail _$PropertyDetailFromJson(Map<String, dynamic> json) {
     ..localityIds = json['localityIds'] as String
     ..addressLine1 = json['addressLine1'] as String
     ..addressLine2 = json['addressLine2'] as String
+    ..cityId = json['cityId'] as String
     ..cityName = json['cityName'] as String
+    ..areaId = json['areaId'] as String
+    ..areaName = json['areaName'] as String
     ..stateName = json['stateName'] as String
     ..landmarkName = json['landmarkName'] as String
     ..pinCode = json['pinCode'] as String
@@ -96,11 +108,25 @@ PropertyDetail _$PropertyDetailFromJson(Map<String, dynamic> json) {
     ..tenantTypeId = json['tenantTypeId'] as int
     ..expectedAmount = (json['expectedAmount'] as num)?.toDouble()
     ..allInclusiveAmount = json['allInclusiveAmount'] as int
-    ..taxAndGovChargeIncluded = json['taxAndGovChargeIncluded'] as int;
+    ..taxAndGovChargeIncluded = json['taxAndGovChargeIncluded'] as int
+    ..postedBy = json['postedBy'] as String
+    ..postedByName = json['postedByName'] as String
+    ..postedTs = json['postedTs'] == null
+        ? null
+        : DateTime.parse(json['postedTs'] as String)
+    ..postedUserTypeId = json['postedUserTypeId'] as int
+    ..dealTs =
+        json['dealTs'] == null ? null : DateTime.parse(json['dealTs'] as String)
+    ..saleTypeId = json['saleTypeId'] as int;
 }
 
 Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
     <String, dynamic>{
+      'statusId': instance.statusId,
+      'createdBy': instance.createdBy,
+      'createdTs': instance.createdTs?.toIso8601String(),
+      'updatedBy': instance.updatedBy,
+      'updatedTs': instance.updatedTs?.toIso8601String(),
       'templateId': instance.templateId,
       'projectName': instance.projectName,
       'propertyTypeId': instance.propertyTypeId,
@@ -114,7 +140,10 @@ Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
       'localityIds': instance.localityIds,
       'addressLine1': instance.addressLine1,
       'addressLine2': instance.addressLine2,
+      'cityId': instance.cityId,
       'cityName': instance.cityName,
+      'areaId': instance.areaId,
+      'areaName': instance.areaName,
       'stateName': instance.stateName,
       'landmarkName': instance.landmarkName,
       'pinCode': instance.pinCode,
@@ -187,6 +216,12 @@ Map<String, dynamic> _$PropertyDetailToJson(PropertyDetail instance) =>
       'expectedAmount': instance.expectedAmount,
       'allInclusiveAmount': instance.allInclusiveAmount,
       'taxAndGovChargeIncluded': instance.taxAndGovChargeIncluded,
+      'postedBy': instance.postedBy,
+      'postedByName': instance.postedByName,
+      'postedTs': instance.postedTs?.toIso8601String(),
+      'postedUserTypeId': instance.postedUserTypeId,
+      'dealTs': instance.dealTs?.toIso8601String(),
+      'saleTypeId': instance.saleTypeId,
     };
 
 PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
@@ -272,4 +307,19 @@ Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
       'tenantTypeIds': instance.tenantTypeIds,
       'postedTs': instance.postedTs?.toIso8601String(),
       'localityIds': instance.localityIds,
+    };
+
+PropertySaveResponse _$PropertySaveResponseFromJson(Map<String, dynamic> json) {
+  return PropertySaveResponse()
+    ..message = json['message'] as String
+    ..status = json['status'] as bool
+    ..propertyId = json['propertyId'] as int;
+}
+
+Map<String, dynamic> _$PropertySaveResponseToJson(
+        PropertySaveResponse instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'status': instance.status,
+      'propertyId': instance.propertyId,
     };

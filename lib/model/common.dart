@@ -1,5 +1,11 @@
-
 class CoreObj {
+  int statusId;
+
+  String createdBy;
+  DateTime createdTs;
+
+  String updatedBy;
+  DateTime updatedTs;
 }
 
 class CoreFilter {
@@ -7,12 +13,15 @@ class CoreFilter {
   int pageSize = 10;
 }
 
-
-class CorePaginationData<T extends CoreObj> {
-int totalRecords;
-List<T> data = List();
+class CoreResponse {
+  String message;
+  bool status = false;
 }
 
+class CorePaginationData<T extends CoreObj> {
+  int totalRecords;
+  List<T> data = List();
+}
 
 class MultiSelectData {
   Map<int, TextSearchData> allData = Map();
@@ -30,5 +39,6 @@ class TextSearchData {
   TextSearchData(this.value);
   TextSearchData.keyValue(this.key, this.value);
   TextSearchData.keyValueTitle(this.key, this.value, this.title);
-  TextSearchData.all(this.dataId, this.type, this.key, this.value, this.title, this.subTitle);
+  TextSearchData.all(
+      this.dataId, this.type, this.key, this.value, this.title, this.subTitle);
 }

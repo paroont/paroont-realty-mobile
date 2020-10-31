@@ -109,7 +109,7 @@ String propertyBuyUnitAmount(PropertyDetail p) {
 String propertyRentAmount(PropertyDetail p) {
   String priceStr = '';
   if (p.transactionTypeId != ARD_PROPERTY_TRANSACTION_TYPE_KEY_SELL) {
-    double rent = p.expectedRentAmount;
+    double rent = p.expectedAmount;
     if (rent > 0) {
       priceStr = '${propertyPriceFormat().format(rent)}/month ';
     }

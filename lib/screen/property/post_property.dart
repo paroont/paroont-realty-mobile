@@ -16,8 +16,6 @@ class PostPropertyScreen extends StatefulWidget {
 /*
   DateTime availabilityTs;
 
-  String reraId;
-
   DateTime ocTs;
 
 
@@ -95,10 +93,14 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
     );
   }
 
-  void _saveProperty() {
-    setState(() {
-      print('Property saved! ${widget.propertyData.toJson()}');
-    });
+  void _saveProperty() async{
+
+      final PropertySaveResponse propertyResponse  = await PropertyService().saveProperty(widget.propertyData);
+      print('Property save response: ${propertyResponse.message}');
+      //Scaffold.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text("${propertyResponse.message}")));
+      if(propertyResponse.status){
+        Navigator.pop(context, propertyResponse);
+      }
   }
 
   Widget _buildBody(BuildContext context) {
@@ -706,7 +708,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Carpet'),
-            keyboardType: TextInputType.number,
+           // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateCarpetArea(double.tryParse(value) ?? 0.0);
             },
@@ -755,7 +757,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Builtup'),
-            keyboardType: TextInputType.number,
+           // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -804,7 +806,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Super Builtup'),
-            keyboardType: TextInputType.number,
+           // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateSuperBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -1026,7 +1028,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Asking Price'),
-            keyboardType: TextInputType.number,
+            //keyboardType: TextInputType.number,
             onChanged: (value) {
               updatePrice(double.tryParse(value) ?? 0.0);
             },
@@ -1038,7 +1040,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Deposit Amount'),
-            keyboardType: TextInputType.number,
+            //keyboardType: TextInputType.number,
             onChanged: (value) {
               updateDepositAmount(double.tryParse(value) ?? 0.0);
             },
@@ -1140,7 +1142,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
   Widget _buildTotalBrokersWidget(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Additional Brokers'),
-      keyboardType: TextInputType.number,
+      //keyboardType: TextInputType.number,
       onChanged: (value) {
         updateTotalBrokers(int.tryParse(value) ?? 0);
       },

@@ -30,7 +30,7 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
 
   void _loadProperties() {
     _properties =
-        PropertyService().allProperties(PropertyService().getMyFilter());
+        PropertyService().allProperties(PropertyService().getMyFilter(), myProperty: true);
   }
 
   Widget _buildMainWidget(BuildContext context) {
