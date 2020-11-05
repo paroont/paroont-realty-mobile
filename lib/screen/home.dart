@@ -3,6 +3,7 @@ import 'package:paroont_realty_mobile/screen/property/search.dart';
 import 'package:paroont_realty_mobile/screen/property/search_result.dart';
 import 'package:paroont_realty_mobile/screen/property/my_property.dart';
 import 'package:paroont_realty_mobile/screen/property/post_property_common.dart';
+import 'package:paroont_realty_mobile/screen/user/user_profile.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   final List<Widget> _widgetOptions = <Widget>[
     PropertySearch(),
     MyPropertyWidget(),
-    MyProfileWidget(),
+    UserProfileWidget(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -111,21 +112,11 @@ class _PropertySearchState extends State<PropertySearch> {
           ],
         ),
       ),
-      floatingActionButton: buildPostPropertyFloatingAction(context),
+      floatingActionButton: PostPropertyFloatingActionButton(
+        (callback) {},
+      ),
     );
   }
 }
 
-class MyProfileWidget extends StatefulWidget {
-  @override
-  _MyProfileWidgetState createState() => _MyProfileWidgetState();
-}
 
-class _MyProfileWidgetState extends State<MyProfileWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('My Profile.'),
-    );
-  }
-}

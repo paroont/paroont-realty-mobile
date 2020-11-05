@@ -29,15 +29,31 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
   }
 
   void _loadProperties() {
-    _properties =
-        PropertyService().allProperties(PropertyService().getMyFilter(), myProperty: true);
+    _properties = PropertyService()
+        .allProperties(PropertyService().getMyFilter(), myProperty: true);
   }
 
   Widget _buildMainWidget(BuildContext context) {
     return Scaffold(
       body: _buildBody(context),
-      floatingActionButton: buildPostPropertyFloatingAction(context),
+      floatingActionButton: PostPropertyFloatingActionButton((saveResponse) {
+        processPostPropertyResponse(saveResponse);
+      }),
     );
+  }
+
+  void processPostPropertyResponse(PropertySaveResponse saveResponse) {
+    if (null != saveResponse) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("${saveResponse.message}")));
+    }
+    loadData();
+  }
+
+  void loadData() {
+    setState(() {
+      _loadProperties();
+    });
   }
 
   Widget _buildBody(BuildContext context) {
@@ -56,6 +72,7 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
                   widget = Text("${snapshot.error}");
                 } else {
                   //  totalRecords = snapshot.data.totalRecords;
+                  allProperties.clear();
                   allProperties.addAll(snapshot.data.data);
                   widget = Container(
                       child: ListView.separated(

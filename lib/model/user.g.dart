@@ -7,8 +7,14 @@ part of 'user.dart';
 // **************************************************************************
 
 UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
-  return UserProfile()
-    ..statusId = json['statusId'] as int
+  return UserProfile(
+    userProfileId: json['userProfileId'] as int,
+    mobileNo: json['mobileNo'] as String,
+    mobileCountryCode: json['mobileCountryCode'] as String,
+    emailId: json['emailId'] as String,
+    statusId: json['statusId'],
+    profileTypeId: json['profileTypeId'] as int,
+  )
     ..createdBy = json['createdBy'] as String
     ..createdTs = json['createdTs'] == null
         ? null
@@ -17,16 +23,11 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
     ..updatedTs = json['updatedTs'] == null
         ? null
         : DateTime.parse(json['updatedTs'] as String)
-    ..userProfileId = json['userProfileId'] as int
     ..userId = json['userId'] as String
     ..firstName = json['firstName'] as String
     ..lastName = json['lastName'] as String
-    ..mobileNo = json['mobileNo'] as String
-    ..mobileCountryCode = json['mobileCountryCode'] as String
-    ..emailId = json['emailId'] as String
     ..emailId2 = json['emailId2'] as String
     ..emailId3 = json['emailId3'] as String
-    ..profileTypeId = json['profileTypeId'] as int
     ..facebookId = json['facebookId'] as String
     ..twitterId = json['twitterId'] as String
     ..instagramId = json['instagramId'] as String
@@ -102,4 +103,44 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'companyWebUrl': instance.companyWebUrl,
       'companyOverview': instance.companyOverview,
       'reraId': instance.reraId,
+    };
+
+UserProfileFilter _$UserProfileFilterFromJson(Map<String, dynamic> json) {
+  return UserProfileFilter(
+    userProfileId: json['userProfileId'] as int,
+    mobileNo: json['mobileNo'] as String,
+    mobileCountryCode: json['mobileCountryCode'] as String,
+    emailId: json['emailId'] as String,
+  )
+    ..pageNo = json['pageNo'] as int
+    ..pageSize = json['pageSize'] as int;
+}
+
+Map<String, dynamic> _$UserProfileFilterToJson(UserProfileFilter instance) =>
+    <String, dynamic>{
+      'pageNo': instance.pageNo,
+      'pageSize': instance.pageSize,
+      'userProfileId': instance.userProfileId,
+      'mobileNo': instance.mobileNo,
+      'mobileCountryCode': instance.mobileCountryCode,
+      'emailId': instance.emailId,
+    };
+
+UserProfileResponse _$UserProfileResponseFromJson(Map<String, dynamic> json) {
+  return UserProfileResponse(
+    status: json['status'] as bool,
+  )
+    ..message = json['message'] as String
+    ..data = (json['data'] as List)
+        ?.map((e) =>
+            e == null ? null : UserProfile.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$UserProfileResponseToJson(
+        UserProfileResponse instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'status': instance.status,
+      'data': instance.data,
     };

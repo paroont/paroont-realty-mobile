@@ -261,6 +261,8 @@ PropertyFilter _$PropertyFilterFromJson(Map<String, dynamic> json) {
     ..furnishIds = (json['furnishIds'] as List)?.map((e) => e as int)?.toList()
     ..postedUserTypeIds =
         (json['postedUserTypeIds'] as List)?.map((e) => e as int)?.toList()
+    ..postedByIds =
+        (json['postedByIds'] as List)?.map((e) => e as String)?.toList()
     ..noOfBathrooms =
         (json['noOfBathrooms'] as List)?.map((e) => e as int)?.toList()
     ..propertyAgeIds =
@@ -302,6 +304,7 @@ Map<String, dynamic> _$PropertyFilterToJson(PropertyFilter instance) =>
       'faceIds': instance.faceIds,
       'furnishIds': instance.furnishIds,
       'postedUserTypeIds': instance.postedUserTypeIds,
+      'postedByIds': instance.postedByIds,
       'noOfBathrooms': instance.noOfBathrooms,
       'propertyAgeIds': instance.propertyAgeIds,
       'tenantTypeIds': instance.tenantTypeIds,

@@ -1,11 +1,13 @@
 import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:paroont_realty_mobile/constant/paroont_const.dart';
+import 'package:paroont_realty_mobile/util/common_util.dart';
 
 part 'user.g.dart';
 
 @JsonSerializable()
 class UserProfile with CoreObj {
-  int userProfileId = 0;
+  int userProfileId;
   String userId;
   String firstName;
   String lastName;
@@ -55,18 +57,50 @@ class UserProfile with CoreObj {
 
   String reraId;
 
-  UserProfile();
-  UserProfile.upid(this.userProfileId);
-
+  UserProfile(
+      {this.userProfileId: 0,
+      this.mobileNo,
+      this.mobileCountryCode,
+      this.emailId,
+      statusId: 1,
+      this.profileTypeId: 2});
   factory UserProfile.fromJson(Map<String, dynamic> json) =>
       _$UserProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
+
+  String takeMobileCountryCode() {
+    return _takeCountryCode(mobileCountryCode);
+  }
+
+  String takeWhatsAppCountryCode() {
+    return _takeCountryCode(whatsAppCountryCode);
+  }
+
+  String takeContactNo2CountryCode() {
+    return _takeCountryCode(contactNo2CountryCode);
+  }
+
+  String takeContactNo3CountryCode() {
+    return _takeCountryCode(contactNo3CountryCode);
+  }
+
+  String _takeCountryCode(String countryCode) {
+    return notBlankStr(countryCode) ? countryCode : ARD_COMMON_DEFAULT_ISD_CODE;
+  }
+
+  String takeFullName() {
+    return notNullStr(firstName) + ' ' + notNullStr(lastName);
+  }
+
+  String takeMobileNo() {
+    return takeMobileCountryCode() + mobileNo;
+  }
 }
 
 class RealtyUser {
   bool loggedIn = false;
-  UserProfile profile = new UserProfile.upid(1);
+  UserProfile profile = new UserProfile();
 
   void logout() {
     loggedIn = false;
@@ -81,4 +115,76 @@ class RealtyUser {
   String takeUserId() {
     return profile.userProfileId.toString();
   }
+
+  String takeIsdCode() {
+    return ARD_COMMON_DEFAULT_ISD_CODE;
+  }
+
+  String takePrimaryMobileIsdCode() {
+    String isdCode = ARD_COMMON_DEFAULT_ISD_CODE;
+    if (loggedIn && notBlankStr(profile.mobileCountryCode)) {
+      isdCode = profile.mobileCountryCode.trim();
+    }
+    return isdCode;
+  }
+
+  String takeFullName() {
+    String fullName = '';
+    if (loggedIn &&
+        (notBlankStr(profile.firstName) || notBlankStr(profile.lastName))) {
+      fullName =
+          notNullStr(profile.firstName) + ' ' + notNullStr(profile.lastName);
+    }
+    return fullName;
+  }
+
+  String takeMobileNo() {
+    return loggedIn
+        ? notNullStr(profile.mobileCountryCode) + notNullStr(profile.mobileNo)
+        : '';
+  }
+}
+
+@JsonSerializable()
+class UserProfileFilter with CoreFilter {
+  int userProfileId = -99;
+  String mobileNo;
+  String mobileCountryCode;
+  String emailId;
+
+  UserProfileFilter(
+      {this.userProfileId,
+      this.mobileNo,
+      this.mobileCountryCode,
+      this.emailId});
+
+  factory UserProfileFilter.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFilterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserProfileFilterToJson(this);
+
+  Map<String, String> toMap() {
+    return {
+      'userProfileId': userProfileId?.toString(),
+      'mobileNo': mobileNo?.toString(),
+      'mobileCountryCode': mobileCountryCode?.toString(),
+      'emailId': emailId?.toString()
+    };
+  }
+}
+
+@JsonSerializable()
+class UserProfileResponse extends CoreResponse {
+  List<UserProfile> data = List();
+
+  UserProfileResponse({bool status: false}) : super(status: status);
+
+  UserProfile takeFirstData() {
+    return null != data && data.length > 0 ? data[0] : null;
+  }
+
+  factory UserProfileResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserProfileResponseToJson(this);
 }

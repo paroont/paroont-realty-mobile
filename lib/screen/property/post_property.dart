@@ -4,7 +4,6 @@ import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
-import 'package:paroont_realty_mobile/screen/property/search_common.dart';
 import 'package:paroont_realty_mobile/constant/ui_const.dart';
 import 'package:paroont_realty_mobile/widget/common_widget.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
@@ -80,27 +79,32 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Post Property'),
-      ),
-      body: _buildBody(context),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: () {
-          _saveProperty();
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Post Property'),
+        ),
+        body: _buildBody(context),
+        floatingActionButton: Builder(
+          builder: (context) {
+            return FloatingActionButton(
+              child: Icon(Icons.save),
+              onPressed: () {
+                _saveProperty(context);
+              },
+            );
+          },
+        ));
   }
 
-  void _saveProperty() async{
-
-      final PropertySaveResponse propertyResponse  = await PropertyService().saveProperty(widget.propertyData);
-      print('Property save response: ${propertyResponse.message}');
-      //Scaffold.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text("${propertyResponse.message}")));
-      if(propertyResponse.status){
-        Navigator.pop(context, propertyResponse);
-      }
+  void _saveProperty(BuildContext context) async {
+    final PropertySaveResponse propertyResponse =
+        await PropertyService().saveProperty(widget.propertyData);
+    print('Property save response: ${propertyResponse.message}');
+    if (propertyResponse.status) {
+      Navigator.pop(context, propertyResponse);
+    } else {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("${propertyResponse.message}")));
+    }
   }
 
   Widget _buildBody(BuildContext context) {
@@ -123,15 +127,13 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
         _makeDataTile(context, 'Area', _buildLocationAreaWidget(context)),
         _makeDataTile(context, 'Locality', _buildLocalitiesWidget(context)),
         _makeDataTile(context, null, _buildLocationSelectWidget(context)),
-       
-  _makeDataTile(context, null, _buildAddress1Widget(context)),
-         _makeDataTile(context, null, _buildLandmarkWidget(context)),
+        _makeDataTile(context, null, _buildAddress1Widget(context)),
+        _makeDataTile(context, null, _buildLandmarkWidget(context)),
         Divider(),
         _makeDataTile(context, null, _buildProjectNameWidget(context)),
         _makeDataTile(context, null, _buildBuilderNameWidget(context)),
         _makeDataTile(context, null, _buildBuildingNameWidget(context)),
- _makeDataTile(context, null, _buildReraWidget(context)),
-        
+        _makeDataTile(context, null, _buildReraWidget(context)),
         Divider(),
         _makeDataTile(context, 'Sale Type', _buildSaleTypesWidget(context)),
         Divider(),
@@ -144,7 +146,6 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
         Divider(),
         _makeDataTile(context, 'Floor', _buildFloorWidget(context)),
         Divider(),
-        
         _makeDataTile(
             context,
             isRental(widget.propertyData) ? 'Preferred Tenant Type' : null,
@@ -157,8 +158,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
         _makeDataTile(
             context, 'Posted By', _buildPostedUserTypesWidget(context)),
         Divider(),
-         _makeDataTile(
-            context, null, _buildTotalBrokersWidget(context)),
+        _makeDataTile(context, null, _buildTotalBrokersWidget(context)),
         Divider(),
         _makeDataTile(
             context, 'Property Facing', _buildFaceTypesWidget(context)),
@@ -708,7 +708,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Carpet'),
-           // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateCarpetArea(double.tryParse(value) ?? 0.0);
             },
@@ -757,7 +757,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Builtup'),
-           // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -806,7 +806,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
           width: 125,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Super Builtup'),
-           // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.number,
             onChanged: (value) {
               updateSuperBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -949,7 +949,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       height: 200,
       child: TextFormField(
         decoration: InputDecoration(labelText: 'Property Description'),
-        keyboardType: TextInputType.multiline,
+        //keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
         maxLines: null,
         maxLength: 2000,
@@ -1166,12 +1166,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   void updateAddress1Name(String newName) {
     setState(() {
-      widget.propertyData.addressLine1= newName;
+      widget.propertyData.addressLine1 = newName;
     });
   }
 
-
-Widget _buildReraWidget(BuildContext context) {
+  Widget _buildReraWidget(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(labelText: 'RERA'),
       onChanged: (value) {
@@ -1182,9 +1181,7 @@ Widget _buildReraWidget(BuildContext context) {
 
   void updateRera(String newName) {
     setState(() {
-      widget.propertyData.reraId= newName;
+      widget.propertyData.reraId = newName;
     });
   }
-
-
 }

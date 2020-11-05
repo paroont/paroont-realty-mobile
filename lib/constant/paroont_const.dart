@@ -9,7 +9,7 @@ const int ARD_COMMON_KEY_ACTIVE = 1;
 const int ARD_COMMON_INVALID_KEY = -99;
 
 
-
+const String ARD_COMMON_DEFAULT_ISD_CODE = "+91";
 
 const String ARD_COMMON_CITY_NAME = "CITY_NAME";
 const String ARD_COMMON_AREA_NAME = "AREA_NAME";
@@ -63,6 +63,8 @@ const String ARD_ = "TYPE_NAME";
 // DATE_FORMAT
 
 const String DF_DD_MMM_YYYY_SPACE = "d MMM, yyyy";
+
+
 
 
 

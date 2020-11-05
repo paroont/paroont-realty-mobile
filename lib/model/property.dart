@@ -241,7 +241,7 @@ class PropertyFilter with CoreFilter {
 
 
 @JsonSerializable()
-class PropertySaveResponse with CoreResponse {
+class PropertySaveResponse extends CoreResponse {
   int propertyId;
   PropertySaveResponse();
 

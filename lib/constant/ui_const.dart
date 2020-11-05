@@ -13,3 +13,7 @@ const String UI_TITLE_POST_PROPERTY_AMOUNT_NEGOTIABLE = 'Price negotiable';
 // UI MESSAGE CONSTATNT
 const String UI_MSG_POST_PROPERTY_SAVE_FAIL = 'Failed while posting property.';
 const String UI_MSG_POST_PROPERTY_SAVE_ERROR = 'Error occurred while posting property.';
+
+
+const String UI_MSG_USER_PROFILE_SAVE_FAIL = 'Failed while saving user profile.';
+const String UI_MSG_USER_PROFILE_SAVE_ERROR = 'Error occurred while saving user profile.';

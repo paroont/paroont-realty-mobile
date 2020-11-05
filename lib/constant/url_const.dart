@@ -20,3 +20,5 @@ const String URL_REALTY_RDM_COMMON_API_DATA_PREFIX =
  const    String URL_REALTY_CACHE_PROPERTY  = URL_REALTY_API_CACHE_DATA_PREFIX + "/properties";
  const    String URL_REALTY_RDM_ARD  = URL_REALTY_RDM_API_DATA_PREFIX + "/app-ref-data";
 
+
+ const    String URL_REALTY_USER_PROFILE  = URL_REALTY_API_DATA_PREFIX + "/user/profiles";

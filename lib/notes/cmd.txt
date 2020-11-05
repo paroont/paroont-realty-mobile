@@ -1,2 +1,6 @@
 #run and build package for json
 flutter pub run build_runner build
+
+
+https://dart.dev/guides/language/effective-dart/usage
+

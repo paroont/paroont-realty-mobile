@@ -15,8 +15,16 @@ class CoreFilter {
 
 class CoreResponse {
   String message;
-  bool status = false;
+  bool status;
+ 
+
+  CoreResponse({this.status:false});
+
+ 
 }
+
+
+
 
 class CorePaginationData<T extends CoreObj> {
   int totalRecords;
