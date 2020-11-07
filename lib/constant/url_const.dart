@@ -1,5 +1,7 @@
 const String URL_REALTY_API_HOST = "localhost:8080";
 
+const String URL_WHATS_APP = "https://wa.me/";
+
 String fullApiUrl(String url) {
   return '$URL_REALTY_API_HOST$url';
 }

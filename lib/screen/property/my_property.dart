@@ -4,7 +4,8 @@ import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 import 'package:paroont_realty_mobile/screen/property/search_common.dart';
 import 'package:paroont_realty_mobile/screen/property/post_property_common.dart';
-import 'package:paroont_realty_mobile/screen/property/post_property.dart';
+import 'package:paroont_realty_mobile/screen/property/search_filter.dart';
+import 'package:paroont_realty_mobile/service/common.dart';
 
 class MyPropertyWidget extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class MyPropertyWidget extends StatefulWidget {
 class _MyPropertyWidgetState extends State<MyPropertyWidget> {
   List<PropertyDetail> allProperties = List();
   Map<int, PropertyDetail> selectedProperties = Map();
+  bool _allSelected = false;
 
   Future<CorePaginationData<PropertyDetail>> _properties;
 
@@ -59,7 +61,91 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return _buildSearchResult(context);
+    return Container(
+      child: Column(children: [
+        _buildSearchTopWidget(context),
+        Expanded(
+          child: _buildSearchResult(context),
+        )
+      ]),
+    );
+  }
+
+  Widget _buildSearchTopWidget(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      _buildSelectAllWidget(context),
+      _buildOtherActionWidget(context)
+    ]);
+  }
+
+  Widget _buildOtherActionWidget(BuildContext context) {
+    List<Widget> _widgets = List();
+    if (selectedProperties.isNotEmpty) {
+      _widgets.add(_buildWhatsAppWidget(context));
+    }
+    _widgets.add(_buildFilterWidget(context));
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.end, children: _widgets);
+  }
+
+  Widget _buildFilterWidget(BuildContext context) {
+    return Container(
+      child: IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PropertyFilterScreen()),
+          );
+        },
+        iconSize: 45,
+        icon: Icon(
+          Icons.list,
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWhatsAppWidget(BuildContext context) {
+    return Row(
+      //  mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        IconButton(
+          onPressed: () {
+            CommonService().sendWhatsApp( number: '+00919819440106', msg: 'hello');
+          },
+          iconSize: 30,
+          icon: Icon(
+            Icons.message,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSelectAllWidget(BuildContext context) {
+    return Container(
+      width: 75,
+      child: Checkbox(
+        value: _allSelected,
+        onChanged: (selected) {
+          setState(() {
+            _processSelectAll(selected);
+          });
+        },
+      ),
+    );
+  }
+
+  void _processSelectAll(bool selected) {
+    _allSelected = selected;
+    selectedProperties.clear();
+    if (selected) {
+      allProperties.forEach((p) {
+        selectedProperties[p.propertyId] = p;
+      });
+    }
   }
 
   Widget _buildSearchResult(BuildContext context) {
@@ -100,6 +186,7 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
     return ListTile(
       //leading: Icon(Icons.check),
       title: buildPropertyTileTitle(context, pd),
+      //contentPadding: EdgeInsets.symmetric(horizontal: 16),
       leading: Checkbox(
         value: selectedProperties.containsKey(pd.propertyId),
         onChanged: (selected) {
@@ -112,12 +199,10 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
       ),
 
       onTap: () {
-        openPostPropertyScreen(context, pd, (saveResponse){
+        openPostPropertyScreen(context, pd, (saveResponse) {
           processPostPropertyResponse(saveResponse);
         });
       },
     );
   }
-
-
 }

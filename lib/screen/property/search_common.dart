@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
-import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
-import 'package:paroont_realty_mobile/service/property.dart';
 
 
 
