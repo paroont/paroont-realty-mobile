@@ -6,115 +6,106 @@ import 'package:paroont_realty_mobile/util/common_util.dart';
 import 'package:paroont_realty_mobile/util/property_util.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 
-Widget buildPropertyResultRow(
-    BuildContext context, PropertyDetail p, bool includeSubTitle) {
-  return ListTile(
-    title: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: <TextSpan>[
-              TextSpan(
-                text:
-                    'Id: ${p.propertyId} ${notNullStr(RdmService().propertyTransactionTypeValue(p.transactionTypeId))} ',
-              ),
-              TextSpan(
-                  text:
-                      '${notNullStr(RdmService().propertyConfigTypeValue(p.configurationId))} ',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(
-                  text:
-                      '${notNullStr(RdmService().propertyTypeGroupsValue(p.propertyTypeId))} '),
-              TextSpan(
-                  text:
-                      '${notNullStr(RdmService().propertyTypeValue(p.propertyTypeGroupId))} '),
-              TextSpan(text: 'in ${notNullStr(p.cityName)} '),
-            ],
-          ),
-        ),
-        RichText(
-          text: TextSpan(style: DefaultTextStyle.of(context).style, children: [
+
+
+
+Widget buildPropertyTileTitle(BuildContext context, PropertyDetail pd) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      RichText(
+        text: TextSpan(
+          style: DefaultTextStyle.of(context).style,
+          children: <TextSpan>[
             TextSpan(
-                text: '${buildingTitle(p)}',
-                style: TextStyle(fontWeight: FontWeight.w400)),
-          ]),
+              text:
+                  'Id: ${pd.propertyId} ${notNullStr(RdmService().propertyTransactionTypeValue(pd.transactionTypeId))} ',
+            ),
+            TextSpan(
+                text:
+                    '${notNullStr(RdmService().propertyConfigTypeValue(pd.configurationId))} ',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(
+                text:
+                    '${notNullStr(RdmService().propertyTypeGroupsValue(pd.propertyTypeId))} '),
+            TextSpan(
+                text:
+                    '${notNullStr(RdmService().propertyTypeValue(pd.propertyTypeGroupId))} '),
+            TextSpan(text: 'in ${notNullStr(pd.cityName)} '),
+          ],
         ),
-        RichText(
-          text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: <TextSpan>[
-              TextSpan(
-                text: '${propertyBuyAmount(p)}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(
-                text: '${propertyBuyUnitAmount(p)}',
-              ),
-              TextSpan(
-                  text: '${propertyRentAmount(p)}',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(
-                  text: '${propertyRentDepositAmount(p)}',
-                  style: TextStyle(fontWeight: FontWeight.w200)),
-              TextSpan(
-                  text: '| ', style: TextStyle(fontWeight: FontWeight.w200)),
-              TextSpan(
-                text: '${propertyArea(p, 1)} ',
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              TextSpan(
-                text: '${propertyArea(p, 2)} ',
-                style: TextStyle(fontWeight: FontWeight.w200),
-              ),
-              TextSpan(
-                text: '${propertyArea(p, 3)} Area',
-                style: TextStyle(fontWeight: FontWeight.w200),
-              ),
-            ],
-          ),
+      ),
+      RichText(
+        text: TextSpan(style: DefaultTextStyle.of(context).style, children: [
+          TextSpan(
+              text: '${buildingTitle(pd)}',
+              style: TextStyle(fontWeight: FontWeight.w400)),
+        ]),
+      ),
+      RichText(
+        text: TextSpan(
+          style: DefaultTextStyle.of(context).style,
+          children: <TextSpan>[
+            TextSpan(
+              text: '${propertyBuyAmount(pd)}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: '${propertyBuyUnitAmount(pd)}',
+            ),
+            TextSpan(
+                text: '${propertyRentAmount(pd)}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: '${propertyRentDepositAmount(pd)}',
+                style: TextStyle(fontWeight: FontWeight.w200)),
+            TextSpan(text: '| ', style: TextStyle(fontWeight: FontWeight.w200)),
+            TextSpan(
+              text: '${propertyArea(pd, 1)} ',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            TextSpan(
+              text: '${propertyArea(pd, 2)} ',
+              style: TextStyle(fontWeight: FontWeight.w200),
+            ),
+            TextSpan(
+              text: '${propertyArea(pd, 3)} Area',
+              style: TextStyle(fontWeight: FontWeight.w200),
+            ),
+          ],
         ),
-        Wrap(
-          children: buildPropertyResultOutlines(context, p),
-          spacing: 2,
-        ),
-      ],
-    ),
-    subtitle: includeSubTitle
-        ? Row(
-            children: [
-              Text("Agent: "),
-              Text("View Contact No: "),
-              IconButton(
-                icon: Icon(
-                  Icons.phone,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.message,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {},
-              ),
-            ],
-          )
-        : null,
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PropertySearchDetailScreen(
-                  propertyDetail: p,
-                )),
-      );
-    },
+      ),
+      Wrap(
+        children: buildPropertyResultOutlines(context, pd),
+        spacing: 2,
+      ),
+    ],
   );
 }
 
+
+Widget buildPropertyTileSubTitle(BuildContext context, PropertyDetail pd) {
+  return Row(
+    children: [
+      Text("Agent: "),
+      Text("View Contact No: "),
+      IconButton(
+        icon: Icon(
+          Icons.phone,
+          color: Theme.of(context).primaryColor,
+        ),
+        onPressed: () {},
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.message,
+          color: Theme.of(context).primaryColor,
+        ),
+        onPressed: () {},
+      ),
+    ],
+  );
+}
 List<Widget> buildPropertyResultOutlines(
     BuildContext context, PropertyDetail p) {
   List<Widget> chips = List();

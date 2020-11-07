@@ -4,6 +4,7 @@ import 'package:paroont_realty_mobile/model/common.dart';
 import 'package:paroont_realty_mobile/service/property.dart';
 import 'package:paroont_realty_mobile/screen/property/search_common.dart';
 import 'package:paroont_realty_mobile/screen/property/post_property_common.dart';
+import 'package:paroont_realty_mobile/screen/property/post_property.dart';
 
 class MyPropertyWidget extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class MyPropertyWidget extends StatefulWidget {
 
 class _MyPropertyWidgetState extends State<MyPropertyWidget> {
   List<PropertyDetail> allProperties = List();
+  Map<int, PropertyDetail> selectedProperties = Map();
 
   Future<CorePaginationData<PropertyDetail>> _properties;
 
@@ -80,8 +82,8 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
                           separatorBuilder: (context, i) => Divider(),
                           itemCount: allProperties.length,
                           itemBuilder: (context, i) {
-                            return buildPropertyResultRow(
-                                context, allProperties[i], false);
+                            return buildMyPropertyResultRow(
+                                context, allProperties[i]);
                           }));
                 }
                 break;
@@ -93,4 +95,29 @@ class _MyPropertyWidgetState extends State<MyPropertyWidget> {
           }),
     );
   }
+
+  Widget buildMyPropertyResultRow(BuildContext context, PropertyDetail pd) {
+    return ListTile(
+      //leading: Icon(Icons.check),
+      title: buildPropertyTileTitle(context, pd),
+      leading: Checkbox(
+        value: selectedProperties.containsKey(pd.propertyId),
+        onChanged: (selected) {
+          setState(() {
+            selected
+                ? selectedProperties[pd.propertyId] = pd
+                : selectedProperties.remove(pd.propertyId);
+          });
+        },
+      ),
+
+      onTap: () {
+        openPostPropertyScreen(context, pd, (saveResponse){
+          processPostPropertyResponse(saveResponse);
+        });
+      },
+    );
+  }
+
+
 }

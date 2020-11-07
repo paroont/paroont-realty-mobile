@@ -94,6 +94,7 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
           subtitle: Text(
               null != v.subTitle && v.subTitle.isNotEmpty ? v.subTitle : ''),
           value: widget.widgetData.selectedData.containsKey(k),
+          controlAffinity: ListTileControlAffinity.leading,
           onChanged: (isSelected) {
             setState(() {
               isSelected

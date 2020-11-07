@@ -14,11 +14,27 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   var emailIdController = new TextEditingController();
   var fullNameController = new TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(context),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initProfileInfo();
+  }
+
+  void _initProfileInfo() {
+    if (UserService().getUser().loggedIn) {
+      var profile = UserService().getUser().profile;
+      fullNameController.text = 'Welcome ' + profile.takeFullName();
+      mobileNoController.text = profile.mobileNo;
+      emailIdController.text = profile.emailId;
+    }
   }
 
   Widget _buildBody(BuildContext context) {
@@ -194,5 +210,3 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     }
   }
 }
-
-

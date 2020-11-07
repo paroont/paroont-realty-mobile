@@ -294,7 +294,7 @@ Map<int, TextSearchData> takePropertyLocalitySearchData() {
 }
 
 TextSearchData takeTextSearchDataByKey(Map<int, TextSearchData> data, key) {
-  return data.values.firstWhere((d) => d.key == key, orElse: null);
+  return data.values.firstWhere((d) => d.key == key, orElse: () => null);
 }
 
 Map<T, String> createFilterDataMap<T>(Map<T, String> dataMap) {

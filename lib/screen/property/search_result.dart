@@ -81,7 +81,7 @@ PropertyService().getFilter().pageNo++;
                           separatorBuilder: (context, i) => Divider(),
                           itemCount: allProperties.length,
                           itemBuilder: (context, i) {
-                            return buildPropertyResultRow(context, allProperties[i], true);
+                            return buildPropertyResultRow(context, allProperties[i]);
                           }));
                 }
                 break;
@@ -107,6 +107,22 @@ PropertyService().getFilter().pageNo++;
   }
 
   
+Widget buildPropertyResultRow(
+    BuildContext context, PropertyDetail pd) {
+  return ListTile(
+    title: buildPropertyTileTitle(context, pd),
+    subtitle:  buildPropertyTileSubTitle(context, pd),
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PropertySearchDetailScreen(
+                  propertyDetail: pd,
+                )),
+      );
+    },
+  );
+}
 
  
 }

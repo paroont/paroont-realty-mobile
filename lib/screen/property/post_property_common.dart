@@ -12,17 +12,19 @@ class PostPropertyFloatingActionButton extends StatelessWidget {
       label: Text(UI_TITLE_POST_PROPERTY_ACTION_INIT),
       icon: Icon(Icons.add),
       onPressed: () {
-        openPostPropertyScreen(context);
+        openPostPropertyScreen(context, new PropertyDetail(), responseCallback);
       },
     );
   }
 
-  void openPostPropertyScreen(BuildContext context) async {
+}
+
+ void openPostPropertyScreen(BuildContext context, PropertyDetail pd, Function(PropertySaveResponse) responseCallback) async {
     final PropertySaveResponse propertyResponse = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PostPropertyScreen(
-          propertyData: new PropertyDetail(),
+          propertyData: pd,
         ),
       ),
     );
@@ -31,4 +33,3 @@ class PostPropertyFloatingActionButton extends StatelessWidget {
     }
     responseCallback(propertyResponse);
   }
-}

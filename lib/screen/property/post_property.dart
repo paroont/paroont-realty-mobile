@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 import 'package:paroont_realty_mobile/model/property.dart';
 import 'package:paroont_realty_mobile/model/common.dart';
@@ -76,6 +77,31 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
   Map<int, TextSearchData> allAreaLocations = takeLocationAreaSearchData();
   Map<int, TextSearchData> allLocalites = takePropertyLocalitySearchData();
 
+  final _propertyFormKey = GlobalKey<FormState>();
+
+  var buildingNameController = new TextEditingController();
+
+  FocusNode _buildingNameFocus;
+  FocusNode _fieldToFocus;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildingNameFocus = FocusNode();
+    _initPropertyInfo();
+  }
+
+  void _initPropertyInfo() {
+    buildingNameController.text = widget.propertyData.buildingName;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    _buildingNameFocus?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +114,13 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
             return FloatingActionButton(
               child: Icon(Icons.save),
               onPressed: () {
-                _saveProperty(context);
+                if (_propertyFormKey.currentState.validate()) {
+                  _fieldToFocus = null;
+                  _saveProperty(context);
+                } else {
+                  _fieldToFocus?.requestFocus();
+                  _fieldToFocus = null;
+                }
               },
             );
           },
@@ -109,65 +141,64 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildBody(BuildContext context) {
     return Container(
+      child: Form(
+        key: _propertyFormKey,
+        autovalidate: true,
         child: ListView(
-      children: [
-        _makeDataTile(
-            context, 'Posting For', _buildTransactionTypesWidget(context)),
-        Divider(),
-        _makeDataTile(
-            context, 'Category', _buildPropertyTypeGroupsWidget(context)),
-        Divider(),
-        _makeDataTile(
-            context, 'Property Type', _buildPropertyTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Number of Bedrooms',
-            _buildPropertyConfigTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'City', _buildLocationCityWidget(context)),
-        _makeDataTile(context, 'Area', _buildLocationAreaWidget(context)),
-        _makeDataTile(context, 'Locality', _buildLocalitiesWidget(context)),
-        _makeDataTile(context, null, _buildLocationSelectWidget(context)),
-        _makeDataTile(context, null, _buildAddress1Widget(context)),
-        _makeDataTile(context, null, _buildLandmarkWidget(context)),
-        Divider(),
-        _makeDataTile(context, null, _buildProjectNameWidget(context)),
-        _makeDataTile(context, null, _buildBuilderNameWidget(context)),
-        _makeDataTile(context, null, _buildBuildingNameWidget(context)),
-        _makeDataTile(context, null, _buildReraWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Sale Type', _buildSaleTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Availability',
-            _buildPropertyAvailableTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Unit Area', _createUnitAreaWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Price', _buildPriceWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Floor', _buildFloorWidget(context)),
-        Divider(),
-        _makeDataTile(
-            context,
-            isRental(widget.propertyData) ? 'Preferred Tenant Type' : null,
-            _buildTenantTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Furnishing', _buildFurnishTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, 'Property Age', _buildAgeTypesWidget(context)),
-        Divider(),
-        _makeDataTile(
-            context, 'Posted By', _buildPostedUserTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, null, _buildTotalBrokersWidget(context)),
-        Divider(),
-        _makeDataTile(
-            context, 'Property Facing', _buildFaceTypesWidget(context)),
-        Divider(),
-        _makeDataTile(context, null, _buildDescriptionWidget(context)),
-        _makeDataTile(context, null, _buildNotesWidget(context)),
-        Divider(),
-      ],
-    ));
+          children: [
+            _makeDataTile(
+                context, 'Posting For', _buildTransactionTypesWidget(context)),
+            _buildTenantTile(context),
+            _makeDataTile(
+                context, 'Category', _buildPropertyTypeGroupsWidget(context)),
+            _makeDataTile(
+                context, 'Property Type', _buildPropertyTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'Number of Bedrooms',
+                _buildPropertyConfigTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'City', _buildLocationCityWidget(context)),
+            _makeDataTile(context, 'Area', _buildLocationAreaWidget(context)),
+            _makeDataTile(context, 'Locality', _buildLocalitiesWidget(context)),
+            _makeDataTile(context, null, _buildLocationSelectWidget(context)),
+            _makeDataTile(context, null, _buildAddress1Widget(context)),
+            _makeDataTile(context, null, _buildLandmarkWidget(context)),
+            _makeDataTile(context, null, _buildProjectNameWidget(context)),
+            _makeDataTile(context, null, _buildBuilderNameWidget(context)),
+            _makeDataTile(context, null, _buildBuildingNameWidget(context)),
+            _makeDataTile(context, null, _buildReraWidget(context)),
+            _makeDataTile(context, 'Sale Type', _buildSaleTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'Availability',
+                _buildPropertyAvailableTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'Unit Area', _createUnitAreaWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'Price', _buildPriceWidget(context)),
+            Divider(),
+            _makeDataTile(context, 'Floor', _buildFloorWidget(context)),
+            Divider(),
+            _makeDataTile(
+                context, 'Furnishing', _buildFurnishTypesWidget(context)),
+            Divider(),
+            _makeDataTile(
+                context, 'Property Age', _buildAgeTypesWidget(context)),
+            Divider(),
+            _makeDataTile(
+                context, 'Posted By', _buildPostedUserTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, null, _buildTotalBrokersWidget(context)),
+            Divider(),
+            _makeDataTile(
+                context, 'Property Facing', _buildFaceTypesWidget(context)),
+            Divider(),
+            _makeDataTile(context, null, _buildDescriptionWidget(context)),
+            _makeDataTile(context, null, _buildNotesWidget(context)),
+            Divider(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _makeDataTile(BuildContext context, String title, Widget content) {
@@ -180,6 +211,7 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
     return ListTile(
       title: Column(
           crossAxisAlignment: CrossAxisAlignment.start, children: widgets),
+      dense: true,
     );
   }
 
@@ -188,6 +220,16 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       myTitle,
       // style: DefaultTextStyle.of(context).style,
     );
+  }
+
+  Widget _buildTenantTile(BuildContext context) {
+    List<Widget> widgets = List();
+    if (isRental(widget.propertyData)) {
+      widgets.add(_makeDataTile(
+          context, 'Preferred Tenant Type', _buildTenantTypesWidget(context)));
+    }
+    widgets.add(Divider());
+    return Column(children: widgets);
   }
 
   Widget _buildTransactionTypesWidget(BuildContext context) {
@@ -458,7 +500,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildProjectNameWidget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Project/Society'),
+      decoration: InputDecoration(
+        labelText: 'Project/Society',
+        counterText: '',
+      ),
+      maxLength: 255,
       onChanged: (value) {
         updateProjectName(value);
       },
@@ -473,7 +519,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildBuilderNameWidget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Builder'),
+      decoration: InputDecoration(
+        labelText: 'Builder',
+        counterText: '',
+      ),
+      maxLength: 255,
       onChanged: (value) {
         updateBuilderName(value);
       },
@@ -488,7 +538,20 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildBuildingNameWidget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Building Name'),
+      decoration: InputDecoration(
+        labelText: 'Building Name',
+        counterText: '',
+      ),
+      maxLength: 255,
+      controller: buildingNameController,
+      focusNode: _buildingNameFocus,
+      validator: (value) {
+        if (value.isEmpty) {
+          _fieldToFocus ??= _buildingNameFocus;
+          return 'Please Enter Building Name';
+        }
+        return null;
+      },
       onChanged: (value) {
         updateBuildingName(value);
       },
@@ -503,7 +566,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildLandmarkWidget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Landmark'),
+      decoration: InputDecoration(
+        labelText: 'Landmark',
+        counterText: '',
+      ),
+      maxLength: 255,
       onChanged: (value) {
         updateLandmark(value);
       },
@@ -707,8 +774,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Carpet'),
-            // keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Carpet',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updateCarpetArea(double.tryParse(value) ?? 0.0);
             },
@@ -756,8 +826,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Builtup'),
-            // keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Builtup',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updateBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -805,8 +878,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Super Builtup'),
-            // keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Super Builtup',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updateSuperBuiltUpArea(double.tryParse(value) ?? 0.0);
             },
@@ -893,9 +969,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Floor No'),
-
-            // keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Floor No',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updateFloorNo(value);
             },
@@ -914,8 +992,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Total Floors'),
-            // keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Total Floors',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updatedTotalFloors(int.tryParse(value) ?? 0);
             },
@@ -945,18 +1026,19 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
   }
 
   Widget _buildDescriptionWidget(BuildContext context) {
-    return Container(
-      height: 200,
-      child: TextFormField(
-        decoration: InputDecoration(labelText: 'Property Description'),
-        //keyboardType: TextInputType.multiline,
-        textInputAction: TextInputAction.newline,
-        maxLines: null,
-        maxLength: 2000,
-        onChanged: (value) {
-          updateDescription(value);
-        },
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Property Description',
+        counterText: '',
+        border: OutlineInputBorder(),
       ),
+      //keyboardType: TextInputType.multiline,
+      textInputAction: TextInputAction.newline,
+      maxLines: 5,
+      maxLength: 2000,
+      onChanged: (value) {
+        updateDescription(value);
+      },
     );
   }
 
@@ -967,18 +1049,19 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
   }
 
   Widget _buildNotesWidget(BuildContext context) {
-    return Container(
-      height: 150,
-      child: TextFormField(
-        decoration: InputDecoration(labelText: 'Notes'),
-        keyboardType: TextInputType.multiline,
-        textInputAction: TextInputAction.newline,
-        maxLines: null,
-        maxLength: 1000,
-        onChanged: (value) {
-          updateNotes(value);
-        },
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Notes',
+        counterText: '',
+        border: OutlineInputBorder(),
       ),
+      //keyboardType: TextInputType.multiline,
+      textInputAction: TextInputAction.newline,
+      maxLines: 3,
+      maxLength: 1000,
+      onChanged: (value) {
+        updateNotes(value);
+      },
     );
   }
 
@@ -1027,8 +1110,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Asking Price'),
-            //keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Asking Price',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updatePrice(double.tryParse(value) ?? 0.0);
             },
@@ -1039,8 +1125,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
       widgets.add(Container(
           width: 125,
           child: TextFormField(
-            decoration: InputDecoration(labelText: 'Deposit Amount'),
-            //keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Deposit Amount',
+              counterText: '',
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
               updateDepositAmount(double.tryParse(value) ?? 0.0);
             },
@@ -1140,12 +1229,19 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 // /////// -- new
 
   Widget _buildTotalBrokersWidget(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Additional Brokers'),
-      //keyboardType: TextInputType.number,
-      onChanged: (value) {
-        updateTotalBrokers(int.tryParse(value) ?? 0);
-      },
+    return Container(
+      width: 150,
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Additional Brokers',
+          counterText: '',
+        ),
+        //keyboardType: TextInputType.number,
+        maxLength: 2,
+        onChanged: (value) {
+          updateTotalBrokers(int.tryParse(value) ?? 0);
+        },
+      ),
     );
   }
 
@@ -1157,7 +1253,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildAddress1Widget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'H.No/Street Name'),
+      decoration: InputDecoration(
+        labelText: 'H.No/Street Name',
+        counterText: '',
+      ),
+      maxLength: 255,
       onChanged: (value) {
         updateAddress1Name(value);
       },
@@ -1172,7 +1272,11 @@ class _PostPropertyScreenState extends State<PostPropertyScreen> {
 
   Widget _buildReraWidget(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'RERA'),
+      decoration: InputDecoration(
+        labelText: 'RERA',
+        counterText: '',
+      ),
+      //maxLength: 255,
       onChanged: (value) {
         updateRera(value);
       },

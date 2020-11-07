@@ -5,12 +5,10 @@ import 'package:paroont_realty_mobile/constant/paroont_const.dart';
 import 'package:paroont_realty_mobile/service/user.dart';
 import 'package:paroont_realty_mobile/service/ref_data.dart';
 
-/*
-CONTACT_NO_2_TITLE
-CONTACT_NO_3_TITLE
-CITY_ID
-CITY_NAME
-*/
+import 'package:paroont_realty_mobile/model/common.dart';
+import 'package:paroont_realty_mobile/widget/common_widget.dart';
+import 'package:paroont_realty_mobile/util/property_util.dart';
+import 'package:paroont_realty_mobile/util/common_util.dart';
 
 class MyProfileWidget extends StatefulWidget {
   final UserProfile profile;
@@ -22,6 +20,23 @@ class MyProfileWidget extends StatefulWidget {
 
 class _MyProfileWidgetState extends State<MyProfileWidget> {
   final _profileFormKey = GlobalKey<FormState>();
+  Map<int, TextSearchData> allCityLocations = takeLocationCitySearchData();
+
+  var cityNameController = new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _initCityName();
+  }
+
+  void _initCityName() {
+    var cityId = widget.profile.cityId;
+    if (notBlankStr(cityId)) {
+      TextSearchData sd = takeTextSearchDataByKey(allCityLocations, cityId);
+      cityNameController.text = sd?.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +47,9 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
         body: _buildBody(context),
         floatingActionButton: Builder(
           builder: (context) {
-            return FloatingActionButton(
-              child: Icon(Icons.save),
+            return FloatingActionButton.extended(
+              label: Text('Save'),
+              icon: Icon(Icons.save),
               onPressed: () {
                 _saveProfile(context);
               },
@@ -44,7 +60,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
 
   Widget _buildBody(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(20),
         child: ListView(
           children: [
             _buildProfileTypesWidget(context),
@@ -73,6 +89,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
 
     formWidgets.add(_buildAddressLine1Widget(context));
     formWidgets.add(_buildAddressLine2Widget(context));
+
     formWidgets.add(_buildCityWidget(context));
 
     formWidgets.add(_buildContactNo2Widget(context));
@@ -104,7 +121,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                 ),
                 prefixIcon: Icon(Icons.phone_iphone),
                 counterText: '',
-                border: InputBorder.none,
+                //border: InputBorder.none,
               ),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               maxLength: 10,
@@ -137,9 +154,9 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                 prefix: Text(
                   widget.profile.takeWhatsAppCountryCode(),
                 ),
-                 prefixIcon: Icon(Icons.phone_iphone),
+                prefixIcon: Icon(Icons.phone_iphone),
                 counterText: '',
-                border: InputBorder.none,
+                //border: InputBorder.none,
               ),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               maxLength: 10,
@@ -169,7 +186,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                 labelText: 'First Name',
                 counterText: '',
                 prefixIcon: Icon(Icons.person),
-                border: InputBorder.none,
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.firstName,
@@ -194,10 +211,11 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
         children: [
           Expanded(
             child: TextFormField(
-              decoration:
-                  InputDecoration(labelText: 'Last Name', counterText: '',
-                    prefixIcon: Icon(Icons.person),
-                     border: InputBorder.none,),
+              decoration: InputDecoration(
+                labelText: 'Last Name', counterText: '',
+                prefixIcon: Icon(Icons.person),
+                //border: InputBorder.none,
+              ),
               maxLength: 255,
               initialValue: widget.profile.lastName,
               validator: (value) {
@@ -224,8 +242,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Primary Email',
                 counterText: '',
-                 prefixIcon: Icon(Icons.email),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.email),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.emailId,
@@ -247,8 +265,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Facebook',
                 counterText: '',
-                 prefixIcon: Icon(Icons.face),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.face),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.facebookId,
@@ -270,8 +288,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Twitter',
                 counterText: '',
-                 prefixIcon: Icon(Icons.tag_faces),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.tag_faces),
+                // border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.twitterId,
@@ -293,8 +311,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Instagram',
                 counterText: '',
-                 prefixIcon: Icon(Icons.face),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.face),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.instagramId,
@@ -316,8 +334,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'RERA',
                 counterText: '',
-                 prefixIcon: Icon(Icons.art_track),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.art_track),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.reraId,
@@ -339,8 +357,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Company Name',
                 counterText: '',
-                 prefixIcon: Icon(Icons.radio),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.radio),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.companyName,
@@ -362,8 +380,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Company Web URL',
                 counterText: '',
-                 prefixIcon: Icon(Icons.web),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.web),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.companyWebUrl,
@@ -385,8 +403,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Address',
                 counterText: '',
-                 prefixIcon: Icon(Icons.home),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.home),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.addressLine1,
@@ -408,37 +426,13 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Address Line 2',
                 counterText: '',
-                 prefixIcon: Icon(Icons.home),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.home),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.addressLine2,
               onChanged: (value) {
                 widget.profile.addressLine2 = value;
-              },
-            ),
-          )
-        ]);
-  }
-
-  Widget _buildCityWidget(BuildContext context) {
-
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'City',
-                counterText: '',
-                 prefixIcon: Icon(Icons.location_city),
-                border: InputBorder.none,
-              ),
-              maxLength: 255,
-              initialValue: widget.profile.cityName,
-              onChanged: (value) {
-                widget.profile.cityName = value;
               },
             ),
           )
@@ -458,8 +452,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                   widget.profile.takeContactNo2CountryCode(),
                 ),
                 counterText: '',
-                 prefixIcon: Icon(Icons.phone),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.phone),
+                //border: InputBorder.none,
               ),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               maxLength: 10,
@@ -491,8 +485,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                   widget.profile.takeContactNo3CountryCode(),
                 ),
                 counterText: '',
-                 prefixIcon: Icon(Icons.phone),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.phone),
+                //border: InputBorder.none,
               ),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               maxLength: 10,
@@ -521,8 +515,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Secondary Email',
                 counterText: '',
-                 prefixIcon: Icon(Icons.alternate_email),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.alternate_email),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.emailId2,
@@ -544,8 +538,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               decoration: InputDecoration(
                 labelText: 'Additional Email',
                 counterText: '',
-                 prefixIcon: Icon(Icons.alternate_email),
-                border: InputBorder.none,
+                prefixIcon: Icon(Icons.alternate_email),
+                //border: InputBorder.none,
               ),
               maxLength: 255,
               initialValue: widget.profile.emailId3,
@@ -564,8 +558,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
         decoration: InputDecoration(
           labelText: 'Company Overview',
           counterText: '',
-           prefixIcon: Icon(Icons.location_city),
-          border: InputBorder.none,
+          prefixIcon: Icon(Icons.location_city),
+          //border: InputBorder.none,
         ),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
@@ -613,6 +607,60 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
       selected
           ? widget.profile.profileTypeId = id
           : widget.profile.profileTypeId = ARD_COMMON_INVALID_KEY;
+    });
+  }
+
+  Widget _buildCityWidget(BuildContext context) {
+    return TextFormField(
+        decoration: InputDecoration(
+          labelText: 'City',
+          prefixIcon: Icon(Icons.location_city),
+          suffixIcon: Icon(Icons.search),
+        ),
+        readOnly: true,
+        controller: cityNameController,
+        onTap: () {
+          _selectCity(context);
+        });
+  }
+
+  _selectCity(BuildContext context) async {
+    MultiSelectData data = new MultiSelectData();
+    Map<int, TextSearchData> sids = Map();
+    String cityId = notNullStr(widget.profile.cityId);
+    if (cityId.isNotEmpty) {
+      var city = takeTextSearchDataByKey(allCityLocations, cityId);
+      if (null != city) {
+        sids[city.dataId] = city;
+      }
+    }
+
+    data.title = 'City ';
+    data.allData = allCityLocations;
+    data.selectedData = sids;
+
+    final selectedData = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiSelectWidget(widgetData: data)));
+    if (null != selectedData) {
+      _updateCity(selectedData);
+    }
+    print("City_Selection_selectedData: $selectedData");
+  }
+
+  void _updateCity(Map<int, TextSearchData> selectedData) {
+    setState(() {
+      widget.profile.cityId = null;
+      widget.profile.cityName = null;
+      cityNameController.clear();
+      selectedData.forEach((key, value) {
+        if (value.type == ARD_COMMON_CITY_NAME) {
+          widget.profile.cityId = value.key;
+          widget.profile.cityName = value.title;
+          cityNameController.text = value.title;
+        }
+      });
     });
   }
 
